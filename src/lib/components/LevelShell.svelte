@@ -17,7 +17,7 @@
 
 <div class="page-root max-w-3xl space-y-4">
 	<nav>
-		<button on:click={navBack}>Map</button>
+		<button class="icon-button" on:click={navBack}> </button>
 	</nav>
 	<div class="content">
 		<h1 class="text-2xl font-bold">{data.level.title}</h1>
@@ -81,11 +81,32 @@
 		box-sizing: border-box;
 	}
 
-	.page-root nav {
+	.page-root nav .icon-button {
 		position: absolute;
 		top: 1rem;
 		left: 1rem;
 		z-index: 10;
+		background-color: #018cd5;
+		background-image: url('/images/map.png');
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+		width: 8rem;
+		height: 6rem;
+		justify-content: center;
+		padding: 12px 24px;
+		border-radius: 12px;
+		border: 3px solid #002b63;
+		box-shadow: 0px 6px #002b63;
+
+		transition:
+			transform 0.1s ease-out,
+			box-shadow 0.1s ease-out;
+		cursor: pointer;
+	}
+	.page-root nav .icon-button:hover {
+		transform: translateY(3px);
+		box-shadow: 0px 3px #002b63;
 	}
 
 	.content {
