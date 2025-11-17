@@ -5,11 +5,19 @@
   "elements": [
     {
       "type": "switch",
-      "next_level": "intro"
-    },
-    {
-      "type": "switch",
-      "next_level": "coordinate_systems"
+      "next_levels": [
+        {
+          "levelId": "intro",
+          "image": "intro.jpg"
+        },
+        {
+          "levelId": {
+            "levelId": "coordinate_systems",
+            "mapId": "map01"
+          },
+          "image": "coordinateSystems.jpg"
+        }
+      ]
     }
   ]
 }
