@@ -1,16 +1,33 @@
 <script lang="ts">
-	import type { ButtonElementData } from '$lib/types';
-	export let element: ButtonElementData;
+    import type { ButtonElementData } from '$lib/types';
+    import { scratchWindowReference } from '$lib/scratchWindowStore'; 
+    
+    export let element: ButtonElementData;
 
-	let openWindow: WindowProxy | null = null;
+    const TARGET_NAME = 'scratch-editor'; 
+    const SCRATCH_URL_PART = 'scratch.mit.edu';
 
-	function openOrFocus() {
-		if (openWindow && !openWindow.closed) {
-			openWindow.focus();
-		} else {
-			openWindow = window.open(element.url, element.target);
-		}
-	}
+    function openOrFocus(event: MouseEvent) {
+        
+        event.preventDefault(); 
+        const isScratch = element.url.includes(SCRATCH_URL_PART);
+        const currentWindow = $scratchWindowReference;
+
+        if (isScratch) {
+            
+            if (currentWindow && !currentWindow.closed) {
+                currentWindow.focus();
+                
+            } else {
+                const newWindow = window.open(element.url, TARGET_NAME);
+                scratchWindowReference.set(newWindow);
+            }
+        } else {
+            window.open(element.url, element.target || '_blank');
+        }
+    }
 </script>
 
-<button onclick="{openOrFocus}">{element.text}</button>
+<button on:click={openOrFocus}>
+    {element.text}
+</button>
