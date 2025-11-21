@@ -15,7 +15,7 @@
 	}
 </script>
 
-<div class="page-root max-w-3xl space-y-4">
+<div class="page-root max-w-3xl space-y-4 level-background">
 	<nav>
 		<button class="icon-button" on:click={navBack}> </button>
 	</nav>
@@ -45,7 +45,7 @@
 </div>
 
 <style>
-	:global(body) {
+	.level-background {
 		background-color: #072a41;
 		background-image:
 			linear-gradient(#12567b, #12567b), linear-gradient(#0f5171, #0f5171),
@@ -68,6 +68,14 @@
 
 		min-height: 100vh;
 		margin: 0;
+	}
+
+	:global(html, body) {
+		margin: 0;
+		padding: 0;
+		height: 100%;
+		width: 100%;
+		box-sizing: border-box;
 	}
 
 	.page-root {
