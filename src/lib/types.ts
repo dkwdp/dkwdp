@@ -19,7 +19,8 @@ export interface VideoElementData extends LevelElementData {
 
 export interface TextElementData extends LevelElementData {
 	type: 'text';
-	markdown: string;
+	markdownFile?: string;
+	markdown?: string;
 }
 
 /*

@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { TextElementData } from "$lib/types";
+	import { marked } from 'marked';
 	export let element: TextElementData;
 </script>
 
 <div class= "text-container">
-	{element.markdown}
+	{@html marked(element.markdown ?? "")}
 </div>
 
 <style>
@@ -14,7 +15,7 @@
 	padding: 1rem;
 	line-height: 1.6;
 	font-family: Arial, sans-serif;
-	color: white; 
+	color: rgb(0, 0, 0);  
 
 	}
 
