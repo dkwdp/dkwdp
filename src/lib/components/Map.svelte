@@ -55,6 +55,56 @@
 		
 		return connections[tile]?.includes(direction) || false;
 	}
+
+		// Funktion: Bestimme den Tile-Typ und Rotation basierend auf Verbindungen
+	function getTileImageInfo(tile: string): { type: string; rotation: number } | null {
+		if (tile === ' ') return null;
+		
+		const north = hasConnection(tile, 'north');
+		const east = hasConnection(tile, 'east');
+		const south = hasConnection(tile, 'south');
+		const west = hasConnection(tile, 'west');
+		
+		const connectionCount = [north, east, south, west].filter(Boolean).length;
+		
+		// Falls keine Verbindungen
+		if (connectionCount === 0) return null;
+		
+		// Einzelne Verbindung (Dead end)
+		if (connectionCount === 1) {
+			if (north || south) return { type: 'straight', rotation: 90 };
+			if (east || west) return { type: 'straight', rotation: 0 };
+		}
+		
+		// Gerade Linie
+		if (connectionCount === 2) {
+			// Vertikale Linie (Nord-Süd)
+			if (north && south) return { type: 'straight', rotation: 90 };
+			// Horizontale Linie (Ost-West)
+			if (east && west) return { type: 'straight', rotation: 0 };
+			
+			// Ecken		
+			if (north && east) return { type: 'corner', rotation: 90 };
+			if (east && south) return { type: 'corner', rotation: 180 };
+			if (south && west) return { type: 'corner', rotation: 270 };
+			if (west && north) return { type: 'corner', rotation: 0 };
+		}
+		
+		// T-Kreuzung
+		if (connectionCount === 3) {
+			if (north && east && west) return { type: 't-junction', rotation: 0 };
+			if (north && south && east) return { type: 't-junction', rotation: 90 };
+			if (east && south && west) return { type: 't-junction', rotation: 180 };
+			if (north && south && west) return { type: 't-junction', rotation: 270 };
+		}
+		
+		// Kreuzung
+		if (connectionCount === 4) {
+			return { type: 'cross', rotation: 0 };
+		}
+		
+		return null;
+	}
 </script>
 
 <div class="map-container">
@@ -71,40 +121,19 @@
 			{#each Array(rows) as _, row}
 				{#each Array(cols) as _, col}
 					{@const tile = getTile(row, col)}
+					{@const tileInfo = getTileImageInfo(tile)}
 					
-					{#if tile !== ' ' && hasConnection(tile, 'north') || hasConnection(tile, 'east') || hasConnection(tile, 'south') || hasConnection(tile, 'west')}
-						<div class="tile-container" style="grid-row: {row + 1}; grid-column: {col + 1};">
-							<svg viewBox="0 0 100 100" class="tile-svg" preserveAspectRatio="none">
-								
-								<!-- Nord-Verbindung -->
-								{#if hasConnection(tile, 'north')}
-									<line x1="50" y1="0" x2="50" y2="50" stroke="#976A1B" stroke-width="35" stroke-linecap="square"/>
-									<line x1="50" y1="0" x2="50" y2="50" stroke="#D69726" stroke-width="30" stroke-linecap="square"/>
-								{/if}
-								
-								<!-- Ost-Verbindung -->
-								{#if hasConnection(tile, 'east')}
-									<line x1="50" y1="50" x2="100" y2="50" stroke="#976A1B" stroke-width="35" stroke-linecap="square"/>
-									<line x1="50" y1="50" x2="100" y2="50" stroke="#D69726" stroke-width="30" stroke-linecap="square"/>
-								{/if}
-								
-								<!-- Süd-Verbindung -->
-								{#if hasConnection(tile, 'south')}
-									<line x1="50" y1="50" x2="50" y2="100" stroke="#976A1B" stroke-width="35" stroke-linecap="square"/>
-									<line x1="50" y1="50" x2="50" y2="100" stroke="#D69726" stroke-width="30" stroke-linecap="square"/>
-								{/if}
-								
-								<!-- West-Verbindung -->
-								{#if hasConnection(tile, 'west')}
-									<line x1="0" y1="50" x2="50" y2="50" stroke="#976A1B" stroke-width="35" stroke-linecap="square"/>
-									<line x1="0" y1="50" x2="50" y2="50" stroke="#D69726" stroke-width="30" stroke-linecap="square"/>
-								{/if}
-								
-								<!-- Zentrum-Punkt für Kreuzungen/Ecken -->
-								<circle cx="50" cy="50" r="10" fill="#D69726"/>
-								<circle cx="50" cy="50" r="7" fill="#D69726"/>
-								
-							</svg>
+					{#if tileInfo}
+						<div 
+							class="tile-container" 
+							style="grid-row: {row + 1}; grid-column: {col + 1}; --rotation: {tileInfo.rotation}deg;"
+						>
+							<img 
+								src="/content/tiles/{tileInfo.type}.png" 
+								alt="path tile"
+								class="tile-img"
+								style="transform: rotate({tileInfo.rotation}deg);"
+							/>
 						</div>
 					{/if}
 				{/each}
@@ -205,11 +234,16 @@
 		width: 100%;
 		height: 100%;
 		pointer-events: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	
-	.tile-svg {
+	.tile-img {
 		width: 100%;
 		height: 100%;
+		object-fit: contain;
+		transform: rotate(var(--rotation));
 		display: block;
 	}
 	
@@ -219,6 +253,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		z-index: 10;
 	}
 	
 	.dot {
