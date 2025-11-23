@@ -68,7 +68,7 @@ export const MapStructure = z.object({
 export const Level = z.object({
 	id: z.string(),
 	title: z.string(),
-	next_level: LevelId.optional(),
+	next_level: LevelId,
 	elements: z.array(LevelElement),
 });
 
