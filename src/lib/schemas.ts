@@ -24,7 +24,8 @@ export const LevelElement = z.discriminatedUnion('type', [
 	}),
 	ElementBase.extend({
 		type: z.literal('text'),
-		markdown: z.string()
+		markdown: z.string().optional(),
+		markdownFile: z.string().optional()
 	}),
 	/*
 	LevelBase.extend({
@@ -67,7 +68,7 @@ export const MapStructure = z.object({
 export const Level = z.object({
 	id: z.string(),
 	title: z.string(),
-	next_level: LevelId,
+	next_level: LevelId.optional(),
 	elements: z.array(LevelElement),
 });
 
