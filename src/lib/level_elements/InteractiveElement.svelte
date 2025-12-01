@@ -13,18 +13,20 @@
 
 	async function loadTutorial() {
 		const outputFrame = document.getElementById('output-frame');
-		const scriptUrl = `${window.location.origin}/content/${mapId}/levels/${level.id}/${element.entrypoint}`;
+		const baseUrl = new URL(`/content/${mapId}/levels/${level.id}/`, location.origin).href;
 
 		// create HTML
 		const htmlContent = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
-		<style>body { margin: 0; overflow: hidden; }</style>
+	<base href="${baseUrl}/">
+	<style>body { margin: 0; overflow: hidden; }</style>
 </head>
 <body>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.1/p5.min.js"><\/script>
-<script src="${scriptUrl}"><\/script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.1/addons/p5.sound.min.js"><\/script>
+	<script src="${element.entrypoint}"><\/script>
 </body>
 </html>
 `;
