@@ -7,7 +7,7 @@ export const load = async ({ params, fetch }) => {
   
   // Load external markdown files
   for (const element of json.elements) {
-    if (element.type === 'text' && element.markdownFile) {
+    if (element.type !== 'text' || !element.markdownFile) continue;
       const mdUrl = `/content/${params.mapId}/levels/${params.levelId}/${element.markdownFile}`;
       const mdRes = await fetch(mdUrl);
       if (mdRes.ok) {
