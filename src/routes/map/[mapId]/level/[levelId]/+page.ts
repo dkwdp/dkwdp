@@ -10,9 +10,12 @@ export const load = async ({ params, fetch }) => {
     if (element.type !== 'text' || !element.markdownFile) continue;
       const mdUrl = `/content/${params.mapId}/levels/${params.levelId}/${element.markdownFile}`;
       const mdRes = await fetch(mdUrl);
-      if (mdRes.ok) {
-        element.markdown = await mdRes.text();
+      if (!mdRes.ok) {
+        element.markdown = **Failed to load markdown file**;
+        continue;
       }
+      
+      element.markdown = await mdRes.text();
     }
   }
   
