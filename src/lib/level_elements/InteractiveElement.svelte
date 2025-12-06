@@ -1,6 +1,5 @@
 <script lang="ts">
 	/* eslint-disable no-useless-escape */
-	import { onMount } from 'svelte';
 	import type { InteractiveElementData, Level } from '$lib/types';
 
 	interface Props {
@@ -10,9 +9,9 @@
 	}
 
 	let { element, level, mapId } = $props() as Props;
+	let outputFrame: HTMLIFrameElement;
 
-	async function loadTutorial() {
-		const outputFrame = document.getElementById('output-frame');
+	$effect(() => {
 		const baseUrl = new URL(`/content/${mapId}/levels/${level.id}/`, location.origin).href;
 
 		// create HTML
@@ -39,15 +38,12 @@
 		} else {
 			console.error('Failed to find the output frame element.');
 		}
-	}
-
-	onMount(() => {
-		loadTutorial();
 	});
 </script>
 
-<div id="output-container" style="display: flex; justify-content: center;">
+<div>
 	<iframe
+		bind:this={outputFrame}
 		title="Tutorial Window"
 		sandbox="allow-scripts"
 		style="width: 60%; height: calc(60vw * 9/16);"
