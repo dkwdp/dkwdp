@@ -41,12 +41,10 @@
 	});
 </script>
 
-<div>
-	<iframe
-		bind:this={outputFrame}
-		title="Tutorial Window"
-		sandbox="allow-scripts"
-		style="width: 60%; height: calc(60vw * 9/16);"
-		id="output-frame"
-	></iframe>
-</div>
+<iframe
+	bind:this={outputFrame}
+	title="Tutorial Window"
+	sandbox="allow-scripts"
+	style="width: 60%; height: calc(60vw * 9/16);"
+	id="output-frame"
+></iframe>
