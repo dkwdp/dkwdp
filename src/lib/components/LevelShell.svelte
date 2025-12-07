@@ -70,14 +70,6 @@
 		margin: 0;
 	}
 
-	:global(html, body) {
-		margin: 0;
-		padding: 0;
-		height: 100%;
-		width: 100%;
-		box-sizing: border-box;
-	}
-
 	.page-root {
 		min-height: 100vh;
 		position: relative;
