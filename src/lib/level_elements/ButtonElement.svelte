@@ -10,7 +10,7 @@
     function openOrFocus(event: MouseEvent) {
         
         event.preventDefault(); 
-        const isScratch = element.url.includes(SCRATCH_URL_PART);
+        const isScratch = $derived(element.url.includes(SCRATCH_URL_PART));
         const currentWindow = $scratchWindowReference;
 
         if (isScratch) {
