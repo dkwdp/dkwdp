@@ -2,7 +2,7 @@
     import type { ButtonElementData } from '$lib/types';
     import { scratchWindowReference } from '$lib/scratchWindowStore'; 
     
-    export let element: ButtonElementData;
+    let { url, target, text }: ButtonElementData = $props();
 
     const TARGET_NAME = 'scratch-editor'; 
     const SCRATCH_URL_PART = 'scratch.mit.edu';
