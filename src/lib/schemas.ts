@@ -16,6 +16,11 @@ export const LevelId = z.union([
 export const ElementBase = z.object({
 	type: ElementType,
 });
+export const NextLevelWithImage = z.object({
+  levelId: LevelId,
+  mapId: z.string().optional(),
+  image: z.string(),
+});
 
 export const LevelElement = z.discriminatedUnion('type', [
 	ElementBase.extend({
@@ -40,10 +45,12 @@ export const LevelElement = z.discriminatedUnion('type', [
 		type: z.literal('interactive'),
 		entrypoint: z.string(),
 	}),
+
 	ElementBase.extend({
-		type: z.literal('switch'),
-		next_level: LevelId,
+	type: z.literal('switch'),
+	next_levels: z.array(NextLevelWithImage),
 	}),
+	
 	ElementBase.extend({
 		type: z.literal('button'),
 		url: z.url(),
