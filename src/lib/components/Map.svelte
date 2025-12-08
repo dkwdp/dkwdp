@@ -72,8 +72,10 @@
 		
 		// Einzelne Verbindung (Dead end)
 		if (connectionCount === 1) {
-			if (north || south) return { type: 'straight', rotation: 90 };
-			if (east || west) return { type: 'straight', rotation: 0 };
+			if (north) return { type: 'dead-end', rotation: 0 }; // Verbindung nach oben
+			if (east) return { type: 'dead-end', rotation: 90 }; // Verbindung nach rechts
+			if (south) return { type: 'dead-end', rotation: 180 }; // Verbindung nach unten
+			if (west) return { type: 'dead-end', rotation: 270 }; // Verbindung nach links
 		}
 		
 		// Gerade Linie
