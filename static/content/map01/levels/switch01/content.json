@@ -18,7 +18,7 @@
           "image": "gold.jpg"
         },
         {
-        "levelId": {
+          "levelId": {
             "levelId": "coordinate_systems",
             "mapId": "map01"
           },
