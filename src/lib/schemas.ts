@@ -24,8 +24,9 @@ export const LevelElement = z.discriminatedUnion('type', [
 	}),
 	ElementBase.extend({
 		type: z.literal('text'),
-		markdown: z.string()
-	}),
+		markdown: z.string().optional(),
+		markdownFile: z.string().optional()
+	}).refine(input => input.markdown || input.markdownFile),
 	/*
 	LevelBase.extend({
 		type: z.literal('quiz'),

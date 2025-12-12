@@ -9,7 +9,7 @@
     },
     {
       "type": "text",
-      "markdown": "Hier ist eine kurze Beschreibung für das Video."
+      "markdownFile": "description.md"
     },
     {
       "type": "button",
