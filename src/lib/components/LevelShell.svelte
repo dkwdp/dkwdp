@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Level } from '$lib/types';
+
 	export let data: { level: Level; mapId: string };
 
 	import VideoElement from '$lib/level_elements/VideoElement.svelte';
@@ -18,7 +19,7 @@
 <div class="page-root level-background">
 	<div class="column-left">
 		<nav>
-			<button class="icon-button" on:click={navBack}> </button>
+			<button class="icon-button" on:click={navBack} aria-label="Karte"></button>
 		</nav>
 	</div>
 
@@ -53,105 +54,101 @@
 </div>
 
 <style>
-	.level-background {
-		background-color: #072a41;
-		background-image:
-			linear-gradient(#12567b, #12567b), linear-gradient(#0f5171, #0f5171),
-			url('/images/patternFlower.png'),
-			linear-gradient(to right, #02428a 0%, #1f72a6 20%, #1f72a6 80%, #02428a 100%);
+    .level-background {
+        background-color: #072a41;
+        background-image: linear-gradient(#12567b, #12567b), linear-gradient(#0f5171, #0f5171),
+        url('/images/patternFlower.png'),
+        linear-gradient(to right, #02428a 0%, #1f72a6 20%, #1f72a6 80%, #02428a 100%);
 
-		background-size:
-			60vw 100%,
-			61vw 100%,
-			auto,
-			auto;
+        background-size: 60vw 100%,
+        61vw 100%,
+        auto,
+        auto;
 
-		background-position:
-			center center,
-			center center,
-			0 0,
-			0 0;
+        background-position: center center,
+        center center,
+        0 0,
+        0 0;
 
-		background-repeat: no-repeat, no-repeat, repeat, no-repeat;
-		min-height: 100vh;
-		margin: 0;
-	}
+        background-repeat: no-repeat, no-repeat, repeat, no-repeat;
+        min-height: 100vh;
+        margin: 0;
+    }
 
-	.page-root {
-		min-height: 100vh;
-		width: 100%;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: stretch;
-		box-sizing: border-box;
-		padding: 1rem;
-	}
+    .page-root {
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: stretch;
+        box-sizing: border-box;
+        padding: 1rem;
+    }
 
 
-	.column-left {
-		flex: 0 0 auto;
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		padding-top: 1rem;
-		padding-left: 1rem;
-		width: 10rem;
-	}
+    .column-left {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 1rem;
+        padding-left: 1rem;
+        width: 10rem;
+    }
 
-	.column-center {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		max-width: 60rem;
-		min-width: 0;
-	}
+    .column-center {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 60rem;
+        min-width: 0;
+    }
 
-	.column-right {
-		flex: 0 0 auto;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		width: 10rem;
-		align-items: flex-end;
-		padding-right: 1rem;
-	}
+    .column-right {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 10rem;
+        align-items: flex-end;
+        padding-right: 1rem;
+    }
 
-	h1 {
-		color: white;
-		text-align: center;
-		margin-top: 2rem;
-		margin-bottom: 2rem;
-	}
+    h1 {
+        color: white;
+        text-align: center;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
 
-	.icon-button {
-		background-color: #018cd5;
-		background-image: url('/images/map.png');
-		background-repeat: no-repeat;
-		background-size: contain;
-		background-position: center;
-		width: 8rem;
-		height: 6rem;
-		border-radius: 12px;
-		border: 3px solid #002b63;
-		box-shadow: 0px 6px #002b63;
-		transition:
-			transform 0.1s ease-out,
-			box-shadow 0.1s ease-out;
-		cursor: pointer;
-	}
+    .icon-button {
+        background-color: #018cd5;
+        background-image: url('/images/map.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        width: 8rem;
+        height: 6rem;
+        border-radius: 12px;
+        border: 3px solid #002b63;
+        box-shadow: 0 6px #002b63;
+        transition: transform 0.1s ease-out,
+        box-shadow 0.1s ease-out;
+        cursor: pointer;
+    }
 
-	.icon-button:hover {
-		transform: translateY(3px);
-		box-shadow: 0px 3px #002b63;
-	}
+    .icon-button:hover {
+        transform: translateY(3px);
+        box-shadow: 0 3px #002b63;
+    }
 
-	.elements-stack {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1rem;
-	}
+    .elements-stack {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
 </style>
