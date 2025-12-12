@@ -1,30 +1,119 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import type { MapStructure } from '$lib/types';
-	export let structure: MapStructure;
+	export let structure: MapStructure; // get map-data
 
-	// Berechne Anzahl der Zeilen und Spalten
-	$: rows = structure.tiles.length;
-	$: cols = structure.tiles[0]?.length || 0;
+	// calculate number of rows and column
+	$: rows = structure.tiles.length; // $ --> new value with change of structure.tiles
+	$: cols = structure.tiles[0]?.length || 0; // ? --> in case tiles[0] doesn't exist
 	
-	// Funktion: Hole das Tile-Zeichen an einer Position
+	// initial start-values for viewport (later automatically changed by bind:clientWidth)
+	let viewportWidth = 1920;
+	let viewportHeight = 1080;
+	
+	$: TILE_SIZE = Math.max(
+		Math.ceil(viewportWidth / cols * 1.5), // map-size is 1.5 times the viewport
+		Math.ceil(viewportHeight / rows * 1.5),
+		120 // minimum tile-size
+	);
+	
+	$: mapWidth = cols * TILE_SIZE;
+	$: mapHeight = rows * TILE_SIZE;
+	
+	// border for scrolling
+	$: maxTranslateX = 0;
+	$: minTranslateX = viewportWidth - mapWidth;
+	$: maxTranslateY = 0;
+	$: minTranslateY = viewportHeight - mapHeight;
+	
+	// drag/drop variables
+	let isDragging = false;
+	let hasMoved = false;
+	let startX = 0;
+	let startY = 0;
+	let translateX = 0;
+	let translateY = 0;
+	let currentTranslateX = 0;
+	let currentTranslateY = 0;
+	
+	function handleMouseDown(e: MouseEvent) {
+		isDragging = true;
+		hasMoved = false;
+		startX = e.clientX - currentTranslateX;
+		startY = e.clientY - currentTranslateY;
+	}
+	
+	function handleMouseMove(e: MouseEvent) {
+		if (!isDragging) return;
+		
+		const newX = e.clientX - startX;
+		const newY = e.clientY - startY;
+		
+		// if mouse has moved (more than 3)
+		if (Math.abs(newX - currentTranslateX) > 3 || Math.abs(newY - currentTranslateY) > 3) {
+			hasMoved = true;
+		}
+		
+		// clamp border
+		translateX = Math.min(maxTranslateX, Math.max(minTranslateX, newX));
+		translateY = Math.min(maxTranslateY, Math.max(minTranslateY, newY));
+	}
+	
+	function handleMouseUp() {
+		isDragging = false;
+		currentTranslateX = translateX;
+		currentTranslateY = translateY;
+	}
+	
+	// touch for mobile devices 
+	function handleTouchStart(e: TouchEvent) {
+		isDragging = true;
+		hasMoved = false;
+		startX = e.touches[0].clientX - currentTranslateX;
+		startY = e.touches[0].clientY - currentTranslateY;
+	}
+	
+	function handleTouchMove(e: TouchEvent) {
+		if (!isDragging) return;
+		
+		const newX = e.touches[0].clientX - startX;
+		const newY = e.touches[0].clientY - startY;
+		
+		// if finger has moved
+		if (Math.abs(newX - currentTranslateX) > 3 || Math.abs(newY - currentTranslateY) > 3) {
+			hasMoved = true;
+		}
+		
+		// clamp border
+		translateX = Math.min(maxTranslateX, Math.max(minTranslateX, newX));
+		translateY = Math.min(maxTranslateY, Math.max(minTranslateY, newY));
+	}
+	
+	function handleTouchEnd() {
+		isDragging = false;
+		currentTranslateX = translateX;
+		currentTranslateY = translateY;
+	}
+
+	// get one tile out of the array
 	function getTile(row: number, col: number): string {
 		return structure.tiles[row]?.[col] || ' ';
 	}
 	
-	// Funktion: Hat ein Tile eine Verbindung in eine Richtung?
+	// check if tile has any connections
 	function hasConnection(tile: string, direction: 'north' | 'east' | 'south' | 'west'): boolean {
 		const connections: Record<string, string[]> = {
-			// Vertikale Linien
+			
+			// vertical lines
 			'I': ['north', 'south'],
 			'i': ['north', 'south'],
 			'|': ['north', 'south'],
 			
-			// Horizontale Linie
+			// horizontal lines
 			'-': ['east', 'west'],
 			'–': ['east', 'west'],
 			
-			// Ecken
+			// corners
 			'L': ['north', 'east'],
 			'l': ['north', 'east'],
 			'r': ['east', 'south'],
@@ -33,7 +122,7 @@
 			'J': ['north', 'west'],
 			'j': ['north', 'west'],
 			
-			// T-Kreuzungen
+			// T-crossing
 			'T': ['east', 'south', 'west'],
 			't': ['east', 'south', 'west'],
 			'q': ['north', 'south', 'west'],
@@ -43,10 +132,10 @@
 			'p': ['north', 'east', 'south'],
 			'P': ['north', 'east', 'south'],
 			
-			// Kreuzung
+			// crossing
 			'+': ['north', 'east', 'south', 'west'],
 			
-			// Dead ends
+			// dead-end
 			"'": ['north'],
 			'>': ['east'],
 			',': ['south'],
@@ -56,7 +145,7 @@
 		return connections[tile]?.includes(direction) || false;
 	}
 
-		// Funktion: Bestimme den Tile-Typ und Rotation basierend auf Verbindungen
+	// check all 4 directions, count connections, rotate tile-image
 	function getTileImageInfo(tile: string): { type: string; rotation: number } | null {
 		if (tile === ' ') return null;
 		
@@ -67,10 +156,10 @@
 		
 		const connectionCount = [north, east, south, west].filter(Boolean).length;
 		
-		// Falls keine Verbindungen
+		// if no connection
 		if (connectionCount === 0) return null;
 		
-		// Einzelne Verbindung (Dead end)
+		// 1 connection (dead-end)
 		if (connectionCount === 1) {
 			if (north) return { type: 'dead-end', rotation: 0 }; // Verbindung nach oben
 			if (east) return { type: 'dead-end', rotation: 90 }; // Verbindung nach rechts
@@ -78,21 +167,21 @@
 			if (west) return { type: 'dead-end', rotation: 270 }; // Verbindung nach links
 		}
 		
-		// Gerade Linie
+		// 2 connections (straight line)
 		if (connectionCount === 2) {
-			// Vertikale Linie (Nord-Süd)
+			// vertical line (north-south)
 			if (north && south) return { type: 'straight', rotation: 90 };
-			// Horizontale Linie (Ost-West)
+			// horizontal line (east-west)
 			if (east && west) return { type: 'straight', rotation: 0 };
 			
-			// Ecken		
+			// corners		
 			if (north && east) return { type: 'corner', rotation: 90 };
 			if (east && south) return { type: 'corner', rotation: 180 };
 			if (south && west) return { type: 'corner', rotation: 270 };
 			if (west && north) return { type: 'corner', rotation: 0 };
 		}
 		
-		// T-Kreuzung
+		// 3 connections (T-crossing)
 		if (connectionCount === 3) {
 			if (north && east && west) return { type: 't-junction', rotation: 0 };
 			if (north && south && east) return { type: 't-junction', rotation: 90 };
@@ -100,7 +189,7 @@
 			if (north && south && west) return { type: 't-junction', rotation: 270 };
 		}
 		
-		// Kreuzung
+		// 4 connections (crossing)
 		if (connectionCount === 4) {
 			return { type: 'cross', rotation: 0 };
 		}
@@ -109,50 +198,89 @@
 	}
 </script>
 
-<div class="map-container">
+<!-- listens for events for whole window (so drag and drop works) -->
+<svelte:window
+	on:mousemove={handleMouseMove} 
+	on:mouseup={handleMouseUp}
+	on:touchmove={handleTouchMove}
+	on:touchend={handleTouchEnd}
+/>
+
+<div class="map-container" bind:clientWidth={viewportWidth} bind:clientHeight={viewportHeight}>
 	<h1>{structure.title}</h1>
 	
-	<div class="map-wrapper">
-		<!-- Hintergrundbild -->
-		<img src={structure.background} alt={structure.title} class="map-bg" />
+	<!-- Svelte normally warns that divs shouldn't have events -->
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<div 
+		class="map-viewport"
+		on:mousedown={handleMouseDown}
+		on:touchstart={handleTouchStart}
+	>
+		<div 
+			class="map-content"
+			style="
+				width: {mapWidth}px; 
+				height: {mapHeight}px;
+				transform: translate({translateX}px, {translateY}px);
+				cursor: {isDragging ? 'grabbing' : 'grab'};
+			"
+		>
+
+		<!-- background-image -->
+		<img src={
+			structure.background} 
+			alt={structure.title} 
+			class="map-bg"
+			draggable="false"
+		/>
 		
-		<!-- Grid mit Wegen und Level-Punkten -->
-		<div class="grid" style="--rows: {rows}; --cols: {cols};">
+		<!-- grid with paths and level-points -->
+		<div class="grid" style="--rows: {rows}; --cols: {cols}; --tile-size: {TILE_SIZE}px;">
 			
-			<!-- 1. Wege zeichnen -->
+			<!-- 1. "paint" the paths -->
+			<!-- Array(rows) creates an empty array with rows slots -->
 			{#each Array(rows) as _, row}
 				{#each Array(cols) as _, col}
+					<!-- local variables for loop -->
 					{@const tile = getTile(row, col)}
 					{@const tileInfo = getTileImageInfo(tile)}
 					
 					{#if tileInfo}
 						<div 
 							class="tile-container" 
-							style="grid-row: {row + 1}; grid-column: {col + 1}; --rotation: {tileInfo.rotation}deg;"
+							style="grid-row: {row + 1}; grid-column: {col + 1};"
 						>
 							<img 
 								src="/content/tiles/{tileInfo.type}.png" 
 								alt="path tile"
 								class="tile-img"
 								style="transform: rotate({tileInfo.rotation}deg);"
+								draggable="false"
 							/>
 						</div>
 					{/if}
 				{/each}
 			{/each}
 			
-			<!-- 2. Level-Punkte platzieren -->
+			<!-- 2. set level-points -->
 			{#each structure.levels as level}
 				<a 
-					href={resolve(`/map/${structure.id}/level/${level.id}`)}
+					href={hasMoved ? undefined : resolve(`/map/${structure.id}/level/${level.id}`)}
 					class="level-node"
 					style="grid-row: {level.pos[0] + 1}; grid-column: {level.pos[1] + 1};"
 					title={level.title}
+					draggable="false"
+					on:click={(e) => {
+						if (hasMoved) {
+							e.preventDefault();
+						}
+					}}
 				>
 					<div class="dot"></div>
 				</a>
 			{/each}
 			
+			</div>
 		</div>
 	</div>
 </div>
@@ -161,6 +289,16 @@
 	* {
 		box-sizing: border-box;
 	}
+
+	:global(body) {
+		overflow: hidden;
+		margin: 0;
+		padding: 0;
+	}
+
+	:global(html) {
+		overflow: hidden;
+	}
 	
 	.map-container {
 		padding: 0;
@@ -168,7 +306,9 @@
 		height: 100vh;
 		overflow: hidden;
 		background: #c9c9af;
-		position: relative;
+		position: fixed;
+		top: 0;
+		left: 0;
 	}
 	
 	h1 {
@@ -180,58 +320,59 @@
 		margin: 0;
 		color: white;
 		font-size: clamp(1.5rem, 4vw, 2.5rem);
+		pointer-events: none;
+		text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 	}
 	
-	.map-wrapper {
+	.map-viewport {
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		overflow: hidden;
+		user-select: none;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.map-viewport::-webkit-scrollbar {
+		display: none;
+	}
+
+	.map-viewport {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+
+	.map-content {
+		position: relative;
+		transition: transform 0.05s ease-out;
+		will-change: transform;
 	}
 	
 	.map-bg {
-		max-width: 100%;
-		max-height: 100%;
-		width: auto;
-		height: auto;
-		object-fit: contain;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 		display: block;
+		pointer-events: none;
 	}
 	
 	.grid {
 		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+		top: 0;
+		left: 0;
 		width: 100%;
 		height: 100%;
-		max-width: 100vw;
-		max-height: 100vh;
 		display: grid;
-		grid-template-rows: repeat(var(--rows), 1fr);
-		grid-template-columns: repeat(var(--cols), 1fr);
-		/* Grid sichtbar machen */
-		background: repeating-linear-gradient(
-			0deg,
-			rgba(255,0,0,0.1) 0px,
-			rgba(255,0,0,0.1) 1px,
-			transparent 1px,
-			transparent calc(100% / var(--rows))
-		),
-		repeating-linear-gradient(
-			90deg,
-			rgba(255,0,0,0.1) 0px,
-			rgba(255,0,0,0.1) 1px,
-			transparent 1px,
-			transparent calc(100% / var(--cols))
-		);
+		grid-template-rows: repeat(var(--rows), var(--tile-size));
+		grid-template-columns: repeat(var(--cols), var(--tile-size));
 	}
 	
-	/* Tiles */
+	/* tiles */
 	.tile-container {
 		width: 100%;
 		height: 100%;
@@ -244,29 +385,35 @@
 	.tile-img {
 		width: 100%;
 		height: 100%;
-		object-fit: contain;
-		transform: rotate(var(--rotation));
+		object-fit: fill;
 		display: block;
+		pointer-events: none;
 	}
 	
-	/* Level-Punkt */
+	/* level-point */
 	.level-node {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		z-index: 10;
+		pointer-events: none;
+		text-decoration: none;
 	}
 	
 	.dot {
-		width: clamp(1.5rem, 3vw, 3rem);
-		height: clamp(1.5rem, 3vw, 3rem);
+		width: clamp(3.5rem, 6vmin, 6rem);
+		height: clamp(3.5rem, 6vmin, 6rem);
 		background: #0088D2;
 		border-radius: 50%;
-		border: clamp(1px, 0.5vw, 3px) solid #005E91;
+		border: clamp(3px, 0.7vmin, 6px) solid #005E91;
+		transition: background 0.2s, transform 0.2s;
+		pointer-events: auto;
+		cursor: pointer;
 	}
 	
 	.level-node:hover .dot {
 		background: #7AD8D8;
+		transform: scale(1.1);
 	}
 </style>
