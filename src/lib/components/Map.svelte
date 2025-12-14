@@ -19,12 +19,27 @@
 	
 	$: mapWidth = cols * TILE_SIZE;
 	$: mapHeight = rows * TILE_SIZE;
+
+	// zoom variable
+	let zoom = 1;
+
+	// min zoom so map always fills viewport
+	$: MIN_ZOOM = Math.max(
+		viewportWidth / mapWidth,
+		viewportHeight / mapHeight
+	);
+	const MAX_ZOOM = 3; // maximum 300%
+	const ZOOM_SENSITIVITY = 0.001;
+	
+	// calculate scaled map size
+	$: scaledMapWidth = mapWidth * zoom;
+	$: scaledMapHeight = mapHeight * zoom;
 	
 	// border for scrolling
 	$: maxTranslateX = 0;
-	$: minTranslateX = viewportWidth - mapWidth;
+	$: minTranslateX = Math.min(0, viewportWidth - scaledMapWidth);
 	$: maxTranslateY = 0;
-	$: minTranslateY = viewportHeight - mapHeight;
+	$: minTranslateY = Math.min(0, viewportHeight - scaledMapHeight);
 	
 	// drag/drop variables
 	let isDragging = false;
@@ -65,32 +80,40 @@
 		currentTranslateY = translateY;
 	}
 	
-	// touch for mobile devices 
-	function handleTouchStart(e: TouchEvent) {
-		isDragging = true;
-		hasMoved = false;
-		startX = e.touches[0].clientX - currentTranslateX;
-		startY = e.touches[0].clientY - currentTranslateY;
-	}
-	
-	function handleTouchMove(e: TouchEvent) {
-		if (!isDragging) return;
+	// zoom with mouse wheel
+	function handleWheel(e: WheelEvent) {
+		e.preventDefault();
 		
-		const newX = e.touches[0].clientX - startX;
-		const newY = e.touches[0].clientY - startY;
+		// mousposition relative to viewport
+		const mouseX = e.clientX;
+		const mouseY = e.clientY;
 		
-		// if finger has moved
-		if (Math.abs(newX - currentTranslateX) > 3 || Math.abs(newY - currentTranslateY) > 3) {
-			hasMoved = true;
-		}
+		// position on map before zoom
+		const mapX = (mouseX - translateX) / zoom;
+		const mapY = (mouseY - translateY) / zoom;
 		
-		// clamp border
-		translateX = Math.min(maxTranslateX, Math.max(minTranslateX, newX));
-		translateY = Math.min(maxTranslateY, Math.max(minTranslateY, newY));
-	}
-	
-	function handleTouchEnd() {
-		isDragging = false;
+		// calculate new zoom
+		const delta = -e.deltaY * ZOOM_SENSITIVITY;
+		const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom + delta));
+		
+		// calculate new translation
+		let newTranslateX = mouseX - mapX * newZoom;
+		let newTranslateY = mouseY - mapY * newZoom;
+		
+		zoom = newZoom;
+		
+		// calculate new borders
+		const newScaledMapWidth = mapWidth * newZoom;
+		const newScaledMapHeight = mapHeight * newZoom;
+		const newMaxTranslateX = 0;
+		const newMinTranslateX = Math.min(0, viewportWidth - newScaledMapWidth);
+		const newMaxTranslateY = 0;
+		const newMinTranslateY = Math.min(0, viewportHeight - newScaledMapHeight);
+		
+		// clamp borders
+		translateX = Math.min(newMaxTranslateX, Math.max(newMinTranslateX, newTranslateX));
+		translateY = Math.min(newMaxTranslateY, Math.max(newMinTranslateY, newTranslateY));
+		
 		currentTranslateX = translateX;
 		currentTranslateY = translateY;
 	}
@@ -202,8 +225,7 @@
 <svelte:window
 	on:mousemove={handleMouseMove} 
 	on:mouseup={handleMouseUp}
-	on:touchmove={handleTouchMove}
-	on:touchend={handleTouchEnd}
+	on:wheel={handleWheel}
 />
 
 <div class="map-container" bind:clientWidth={viewportWidth} bind:clientHeight={viewportHeight}>
@@ -214,15 +236,15 @@
 	<div 
 		class="map-viewport"
 		on:mousedown={handleMouseDown}
-		on:touchstart={handleTouchStart}
 	>
 		<div 
 			class="map-content"
 			style="
 				width: {mapWidth}px; 
 				height: {mapHeight}px;
-				transform: translate({translateX}px, {translateY}px);
+				transform: translate({translateX}px, {translateY}px) scale({zoom});
 				cursor: {isDragging ? 'grabbing' : 'grab'};
+				transform-origin: 0 0;
 			"
 		>
 
@@ -332,21 +354,10 @@
 		height: 100%;
 		overflow: hidden;
 		user-select: none;
-		-webkit-overflow-scrolling: touch;
-	}
-
-	.map-viewport::-webkit-scrollbar {
-		display: none;
-	}
-
-	.map-viewport {
-		-ms-overflow-style: none;
-		scrollbar-width: none;
 	}
 
 	.map-content {
 		position: relative;
-		transition: transform 0.05s ease-out;
 		will-change: transform;
 	}
 	
@@ -402,11 +413,11 @@
 	}
 	
 	.dot {
-		width: clamp(3.5rem, 6vmin, 6rem);
-		height: clamp(3.5rem, 6vmin, 6rem);
+		width: 4rem;
+		height: 4rem;
 		background: #0088D2;
 		border-radius: 50%;
-		border: clamp(3px, 0.7vmin, 6px) solid #005E91;
+		border: 4px solid #005E91;
 		transition: background 0.2s, transform 0.2s;
 		pointer-events: auto;
 		cursor: pointer;
