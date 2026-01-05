@@ -39,9 +39,15 @@ export interface InteractiveElementData extends LevelElementData {
 	entrypoint: string;
 }
 
+export interface NextLevelWithImage {
+  levelId: LevelId;
+  mapId?: string;
+  image: string;
+}
+
 export interface SwitchElementData extends LevelElementData {
-	type: 'switch';
-	next_level: LevelId;
+  type: 'switch';
+  next_levels: NextLevelWithImage[];
 }
 
 export interface ButtonElementData extends LevelElementData {
