@@ -10,7 +10,7 @@
 	}
 </script>
 
-<button onclick={openLevelId} class="mdi mdi-arrow-right-thick"></button>
+<button onclick={openLevelId} class="mdi mdi-arrow-right-thick" aria-label="Nächstes Level"></button>
 
 <style>
 	button {
