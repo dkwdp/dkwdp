@@ -1,21 +1,18 @@
 <script lang="ts">
-	import type { SwitchElementData } from '$lib/types';
-	import { normalize_and_goto, normalize_level_id } from '$lib/helpers';
+	import type { SwitchElementData, NextLevelWithImage } from '$lib/types';
+	import { normalize_and_goto } from '$lib/helpers';
 	import { page } from '$app/state';
 
 	export let element: SwitchElementData;
 	const countChoices = element.next_levels.length;
 
-	function go(chosen: { levelId: any }) {
+	function go(chosen: NextLevelWithImage) {
 		normalize_and_goto(chosen.levelId, page.params.mapId);
 	}
 </script>
 
-<!--<button class="px-3 py-2 rounded-lg shadow" on:click={go}>
-	Nice description of level {normalize_level_id(element.next_level, page.params.mapId)}.
-</button>-->
-<div class="imageRow" class:two={countChoices == 2} class:three={countChoices == 3}>
-	{#each element.next_levels as choice}
+<div class="imageRow" class:two={countChoices === 2} class:three={countChoices === 3}>
+	{#each element.next_levels as choice, i (i)}
 		<button class="imageButton" on:click={() => go(choice)}>
 			<img
 				class="image"
