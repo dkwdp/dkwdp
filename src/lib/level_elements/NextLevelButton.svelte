@@ -10,13 +10,13 @@
 	}
 </script>
 
-<button onclick={openLevelId} class="mdi mdi-arrow-right-thick"></button>
+<button onclick={openLevelId} class="mdi mdi-arrow-right-thick" aria-label="Nächstes Level"></button>
 
 <style>
 	button {
 		color: #094579;
 		cursor: pointer;
-		background-color: #2180b6;
+		background-color: #018cd5;
 		height: 28rem;
 		width: 6rem;
 		font-size: 5rem;
