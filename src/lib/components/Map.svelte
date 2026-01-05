@@ -273,7 +273,7 @@
 							style="grid-row: {row + 1}; grid-column: {col + 1};"
 						>
 							<img 
-								src="/static/tiles/{tileInfo.type}.png" 
+								src="/tiles/{tileInfo.type}.png"
 								alt="path tile"
 								class="tile-img"
 								style="transform: rotate({tileInfo.rotation}deg);"
