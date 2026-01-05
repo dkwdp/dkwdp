@@ -1,23 +1,10 @@
-<!--
-<script lang="ts">
-	import { resolve } from '$app/paths';
-</script>
-
-<h1 class="text-3xl font-bold">Der kleine Weg des Programmierens - Title Page</h1>
-<ul class="mt-4 list-disc pl-6">
-	<li>
-		<a class="underline" href="{resolve('/map/map01')}">Start</a>
-	</li>
-</ul>
--->
-
 <script lang="ts">
   import { resolve } from '$app/paths';
 </script>
 
 <div class="page-container">
   <div class="image-container">
-    <img src="/homescreen_resized.png" alt="Adventure Background" class="homescreen-image" />
+    <img src="/homescreen_resized.jpg" alt="Adventure Background" class="homescreen-image" />
 
     <div class="buttons">
       <a href="{resolve('/map/map01')}" class="start-button">
@@ -28,11 +15,6 @@
 </div>
 
 <style>
-  :global(body) {
-    margin: 0;
-    overscroll-behavior: none;
-  }
-  
   .page-container {
     height: 100vh;
   }

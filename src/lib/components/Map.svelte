@@ -36,9 +36,9 @@
 	$: scaledMapHeight = mapHeight * zoom;
 	
 	// border for scrolling
-	$: maxTranslateX = 0;
+	const maxTranslateX = 0;
 	$: minTranslateX = Math.min(0, viewportWidth - scaledMapWidth);
-	$: maxTranslateY = 0;
+	const maxTranslateY = 0;
 	$: minTranslateY = Math.min(0, viewportHeight - scaledMapHeight);
 	
 	// drag/drop variables
@@ -261,8 +261,8 @@
 			
 			<!-- 1. "paint" the paths -->
 			<!-- Array(rows) creates an empty array with rows slots -->
-			{#each Array(rows) as _, row}
-				{#each Array(cols) as _, col}
+			{#each {length: rows}, row (row)}
+				{#each {length: cols}, col (col)}
 					<!-- local variables for loop -->
 					{@const tile = getTile(row, col)}
 					{@const tileInfo = getTileImageInfo(tile)}
@@ -273,7 +273,7 @@
 							style="grid-row: {row + 1}; grid-column: {col + 1};"
 						>
 							<img 
-								src="/content/tiles/{tileInfo.type}.png" 
+								src="/static/tiles/{tileInfo.type}.png" 
 								alt="path tile"
 								class="tile-img"
 								style="transform: rotate({tileInfo.rotation}deg);"
@@ -285,7 +285,7 @@
 			{/each}
 			
 			<!-- 2. set level-points -->
-			{#each structure.levels as level}
+			{#each structure.levels as level (level.id)}
 				<a 
 					href={hasMoved ? undefined : resolve(`/map/${structure.id}/level/${level.id}`)}
 					class="level-node"
@@ -310,16 +310,6 @@
 <style>
 	* {
 		box-sizing: border-box;
-	}
-
-	:global(body) {
-		overflow: hidden;
-		margin: 0;
-		padding: 0;
-	}
-
-	:global(html) {
-		overflow: hidden;
 	}
 	
 	.map-container {
