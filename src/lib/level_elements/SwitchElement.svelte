@@ -24,6 +24,7 @@
 					choice.image}
 				alt=""
 			/>
+			<h3 class="switchTitle">{choice.title || ''}</h3>
 		</button>
 	{/each}
 </div>
@@ -31,6 +32,7 @@
 <style>
 	.imageButton {
 		padding: 0;
+		position: relative;
 		background: none;
 		display: inline-block;
 		border-radius: 12px;
@@ -69,5 +71,16 @@
 		width: 100%;
 		height: auto;
 		display: block;
+	}
+
+	.switchTitle {
+		top: 30%;
+		left: 0%;
+		position: absolute;
+		width: 100%;
+		height: auto;
+		color: #f6f4f1;
+		font-family: 'Changa One', sans-serif;
+		font-size: 3cqw;
 	}
 </style>
