@@ -18,7 +18,6 @@ export const ElementBase = z.object({
 });
 export const NextLevelWithImage = z.object({
   levelId: LevelId,
-  mapId: z.string().optional(),
   image: z.string(),
 });
 

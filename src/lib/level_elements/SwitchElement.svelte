@@ -35,7 +35,7 @@
 		display: inline-block;
 		border-radius: 12px;
 		border: 3px solid #0b0b0b;
-		box-shadow: 0px 6px #0b0b0b;
+		box-shadow: 0 6px #0b0b0b;
 
 		transition:
 			transform 0.1s ease-out,
@@ -45,7 +45,7 @@
 
 	.imageButton:hover {
 		transform: translateY(3px);
-		box-shadow: 0px 3px #0b0b0b;
+		box-shadow: 0 3px #0b0b0b;
 	}
 
 	.two .imageButton {

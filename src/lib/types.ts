@@ -41,7 +41,6 @@ export interface InteractiveElementData extends LevelElementData {
 
 export interface NextLevelWithImage {
   levelId: LevelId;
-  mapId?: string;
   image: string;
 }
 

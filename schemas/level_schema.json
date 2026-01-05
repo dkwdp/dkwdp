@@ -72,11 +72,13 @@
               },
               "markdown": {
                 "type": "string"
+              },
+              "markdownFile": {
+                "type": "string"
               }
             },
             "required": [
-              "type",
-              "markdown"
+              "type"
             ],
             "additionalProperties": false
           },
@@ -104,43 +106,59 @@
                 "type": "string",
                 "const": "switch"
               },
-              "next_level": {
-                "anyOf": [
-                  {
-                    "anyOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "levelId": {
-                            "type": "string"
-                          },
-                          "mapId": {
-                            "type": "string"
-                          },
-                          "serverUrl": {
-                            "type": "string",
-                            "format": "uri"
-                          }
+              "next_levels": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "levelId": {
+                      "anyOf": [
+                        {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "levelId": {
+                                  "type": "string"
+                                },
+                                "mapId": {
+                                  "type": "string"
+                                },
+                                "serverUrl": {
+                                  "type": "string",
+                                  "format": "uri"
+                                }
+                              },
+                              "required": [
+                                "levelId"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
                         },
-                        "required": [
-                          "levelId"
-                        ],
-                        "additionalProperties": false
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ]
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "image": {
+                      "type": "string"
+                    }
                   },
-                  {
-                    "type": "null"
-                  }
-                ]
+                  "required": [
+                    "levelId",
+                    "image"
+                  ],
+                  "additionalProperties": false
+                }
               }
             },
             "required": [
               "type",
-              "next_level"
+              "next_levels"
             ],
             "additionalProperties": false
           },
