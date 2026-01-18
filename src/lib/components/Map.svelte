@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import type { MapStructure } from '$lib/types';
 	export let structure: MapStructure; // get map-data
@@ -52,6 +53,21 @@
 	let currentTranslateX = 0;
 	let currentTranslateY = 0;
 	
+	onMount(() => {
+		const saved = localStorage.getItem(`map-view-${mapId}`);
+		if (!saved) return;
+		try {
+			({ zoom, translateX, translateY } = JSON.parse(saved));
+			currentTranslateX = translateX;
+			currentTranslateY = translateY;
+		} catch {}
+	});
+	
+	// save zoomlevel and position to localstorage
+	function saveView() {
+		localStorage.setItem(`map-view-${mapId}`, JSON.stringify({ zoom, translateX, translateY }));
+	}
+	
 	function handleMouseDown(e: MouseEvent) {
 		isDragging = true;
 		hasMoved = false;
@@ -79,6 +95,7 @@
 		isDragging = false;
 		currentTranslateX = translateX;
 		currentTranslateY = translateY;
+		saveView();
 	}
 	
 	// zoom with mouse wheel
@@ -117,6 +134,7 @@
 		
 		currentTranslateX = translateX;
 		currentTranslateY = translateY;
+		saveView();
 	}
 
 	// get one tile out of the array
