@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import type { MapStructure } from '$lib/types';
 	export let structure: MapStructure; // get map-data
+	export let mapId: string; 
 
 	// calculate number of rows and column
 	$: rows = structure.tiles.length; // $ --> new value with change of structure.tiles
@@ -250,7 +251,7 @@
 
 		<!-- background-image -->
 		<img src={
-			structure.background} 
+			`/content/${mapId}/${structure.background}`} 
 			alt={structure.title} 
 			class="map-bg"
 			draggable="false"

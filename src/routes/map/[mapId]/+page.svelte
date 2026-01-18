@@ -4,4 +4,4 @@
   export let data: { structure: MapStructure, mapId: string };
 </script>
 
-<Map structure={data.structure}/>
+<Map structure={data.structure} mapId={data.mapId}/>
