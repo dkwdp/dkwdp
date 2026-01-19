@@ -25,6 +25,9 @@
 				alt=""
 			/>
 			<h3 class="switchTitle">{choice.title || ''}</h3>
+			<div class="descBox">
+				<p class="switchDesc">{choice.description || ''}</p>
+			</div>
 		</button>
 	{/each}
 </div>
@@ -74,7 +77,7 @@
 	}
 
 	.switchTitle {
-		top: 30%;
+		top: 1%;
 		left: 0%;
 		position: absolute;
 		width: 100%;
@@ -82,5 +85,28 @@
 		color: #f6f4f1;
 		font-family: 'Changa One', sans-serif;
 		font-size: 3cqw;
+		text-shadow:
+			-1px -1px 0 black,
+			1px -1px 0 black,
+			-1px  1px 0 black,
+			1px  1px 0 black;
+	}
+	
+	.switchDesc{
+		top: 60%;
+		left: 0%;
+		position: absolute;
+		width: 100%;
+		height: auto;
+		color: #f6f4f1;
+		font-family: 'Changa One', sans-serif;
+		font-size: 2cqw;
+		text-shadow:
+			-1px -1px 0 black,
+			1px -1px 0 black,
+			-1px  1px 0 black,
+			1px  1px 0 black;
+		background-color: #0b0b0b;
+		opacity: .7;
 	}
 </style>
