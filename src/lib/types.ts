@@ -1,5 +1,6 @@
 interface LevelIdImpl {
 	levelId: string,
+	previousLevelId: string,
 	mapId?: string,
 	serverUrl?: string,
 }

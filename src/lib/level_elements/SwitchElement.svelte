@@ -7,7 +7,7 @@
 	const countChoices = element.next_levels.length;
 
 	function go(chosen: NextLevelWithImage) {
-		normalize_and_goto(chosen.levelId, page.params.mapId);
+		normalize_and_goto(chosen.levelId, page.params.mapId, "");
 	}
 </script>
 

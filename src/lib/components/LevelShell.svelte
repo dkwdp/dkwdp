@@ -9,6 +9,7 @@
 	import SwitchElement from '$lib/level_elements/SwitchElement.svelte';
 	import ButtonElement from '$lib/level_elements/ButtonElement.svelte';
 	import NextLevelButton from '$lib/level_elements/NextLevelButton.svelte';
+    import PreviousLevelButton from '$lib/level_elements/PreviousLevelButton.svelte';
 	import { navigateToMap } from '$lib/helpers';
 
 	function navBack() {
@@ -21,6 +22,12 @@
 		<nav>
 			<button class="icon-button" on:click={navBack} aria-label="Karte"></button>
 		</nav>
+        <div class="previousLevel-wrapper">
+            {#if data.level.next_level}
+            
+				<PreviousLevelButton levelId={data.level.next_level} />
+			{/if}
+		</div>
 	</div>
 
 	<div class="column-center">

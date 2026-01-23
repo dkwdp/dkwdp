@@ -8,19 +8,23 @@
       "next_levels": [
         {
           "levelId": "intro",
-          "image": "blue.jpg"
+          "image": "blue.jpg",
+          "previousLevelId": "intro"
         },
         {
           "levelId": {
             "levelId": "coordinate_systems",
-            "mapId": "map01"
+            "mapId": "map01",
+            "previousLevelId": "intro"
           },
           "image": "gold.jpg"
         },
         {
           "levelId": {
             "levelId": "coordinate_systems",
-            "mapId": "map01"
+            "mapId": "map01",
+            
+            "previousLevelId": "intro"
           },
           "image": "purple.jpg"
         }
