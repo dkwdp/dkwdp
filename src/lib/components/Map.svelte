@@ -3,7 +3,8 @@
 	import { resolve } from '$app/paths';
 	import type { MapStructure } from '$lib/types';
 	export let structure: MapStructure; // get map-data
-	export let mapId: string; 
+	export let mapId: string;
+	export let highlightedLevelId: string 
 
 	// calculate number of rows and column
 	$: rows = structure.tiles.length; // $ --> new value with change of structure.tiles
@@ -304,7 +305,7 @@
 			{/each}
 			
 			<!-- 2. set level-points -->
-			{#each structure.levels as level (level.id)}
+			{#each structure.levels as level, index (level.id)}
 				<a 
 					href={hasMoved ? undefined : resolve(`/map/${structure.id}/level/${level.id}`)}
 					class="level-node"
@@ -317,7 +318,7 @@
 						}
 					}}
 				>
-					<div class="dot"></div>
+					<div class="dot" class:highlighted={level.id === highlightedLevelId}></div>
 				</a>
 			{/each}
 			
@@ -436,4 +437,22 @@
 		background: #7AD8D8;
 		transform: scale(1.1);
 	}
+	
+	.dot.highlighted {
+		animation: pulse 1.5s ease-in-out infinite;
+		/*box-shadow: 0 0 15px rgba(0, 255, 255, 1);  */
+	}
+	.level-node:hover .dot.highlighted {
+		transform: scale(1.1);
+	}
+
+	@keyframes pulse {
+		0%, 100% { 
+			transform: scale(1.00); 
+		}
+		50% { 
+			transform: scale(1.35); 
+		}
+	}
+	
 </style>
