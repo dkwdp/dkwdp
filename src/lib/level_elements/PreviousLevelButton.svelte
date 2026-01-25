@@ -4,14 +4,13 @@
 	import { page } from '$app/state';
 	export let levelId: LevelId;
 
-	function openLevelId() {
-		console.log(levelId);
+	function openPreviousLevelId() {
 		if (page.params.mapId == null) throw new Error('mapId is null');
 		normalize_and_goto(levelId, page.params.mapId);
 	}
 </script>
 
-<button onclick={openLevelId} class="mdi mdi-arrow-right-thick" aria-label="Nächstes Level"></button>
+<button onclick={openPreviousLevelId} class="mdi mdi-arrow-left-thick" aria-label="Vorheriges Level"></button>
 
 <style>
 	button {

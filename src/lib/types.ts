@@ -5,6 +5,7 @@ interface LevelIdImpl {
 }
 
 export type LevelId = LevelIdImpl | string | null;
+export type PreviousLevelId = LevelIdImpl | string | null;
 
 export type ElementType = 'video'|'text'|'quiz'|'interactive'|'switch'|"button";
 
@@ -60,6 +61,7 @@ export interface Level {
 	id: string,
 	title: string,
 	next_level?: LevelId,
+	previous_level?: LevelId,
 	elements: LevelElementData[],
 }
 

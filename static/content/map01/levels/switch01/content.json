@@ -2,6 +2,7 @@
   "id": "switch01",
   "title": "Level: Spiele oder Geschichten?",
   "next_level": null,
+  "previous_level": "coordinate_systems",
   "elements": [
     {
       "type": "switch",
