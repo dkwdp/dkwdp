@@ -1,7 +1,7 @@
 {
   "id": "map01",
   "title": "Map: Scratch erste Schritte",
-  "background": "/content/map_backgrounds/bg01.png",
+  "background": "background.jpg",
   "levels": [
     { "id": "intro", "title": "Welcome", "pos": [1, 0] },
     { "id": "coordinate_systems", "title": "Koordinaten Systeme", "pos": [1, 1] },
