@@ -2,6 +2,7 @@
   "id": "intro",
   "title": "Level: Welcome Text",
   "next_level": "coordinate_systems",
+  "previous_level": null,
   "elements": [
     {
       "type": "video",

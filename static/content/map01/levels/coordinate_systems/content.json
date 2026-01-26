@@ -2,6 +2,7 @@
   "id": "coordinate_systems",
   "title": "Level: Interaktives Tutorial zum Thema Koordinatensysteme",
   "next_level": "switch01",
+  "previous_level": "intro",
   "elements": [
     {
       "type": "interactive",
