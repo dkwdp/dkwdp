@@ -7,22 +7,21 @@
       "type": "switch",
       "next_levels": [
         {
-          "levelId": "intro",
-          "image": "blue.jpg"
+          "levelId": {
+            "levelId": "coordinate_systems",
+            "mapId": "map01"
+          },
+          "image": "kreativ.png",
+          "title": "Kreativ sein"
         },
         {
           "levelId": {
             "levelId": "coordinate_systems",
             "mapId": "map01"
           },
-          "image": "gold.jpg"
-        },
-        {
-          "levelId": {
-            "levelId": "coordinate_systems",
-            "mapId": "map01"
-          },
-          "image": "purple.jpg"
+          "image": "hands-on.png",
+          "title": "Dinge bewegen",
+          "description": "Beschreibung"
         }
       ]
     }

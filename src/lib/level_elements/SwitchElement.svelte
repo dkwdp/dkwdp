@@ -24,6 +24,12 @@
 					choice.image}
 				alt=""
 			/>
+			<h3 class="switchTitle">{choice.title || ''}</h3>
+			{#if choice.description}
+				<div class="descBox">
+					<p class="switchDesc">{choice.description || ''}</p>
+				</div>
+			{/if}
 		</button>
 	{/each}
 </div>
@@ -31,6 +37,7 @@
 <style>
 	.imageButton {
 		padding: 0;
+		position: relative;
 		background: none;
 		display: inline-block;
 		border-radius: 12px;
@@ -69,5 +76,42 @@
 		width: 100%;
 		height: auto;
 		display: block;
+	}
+
+	.switchTitle {
+		top: 1%;
+		left: 0%;
+		position: absolute;
+		width: 100%;
+		height: auto;
+		color: #f6f4f1;
+		font-family: 'Changa One', sans-serif;
+		font-size: 3cqw;
+		text-shadow:
+			-1px -1px 0 black,
+			1px -1px 0 black,
+			-1px 1px 0 black,
+			1px 1px 0 black;
+	}
+
+	.descBox {
+		top: 60%;
+		left: 0%;
+		position: absolute;
+		width: 100%;
+		background-color: rgba(11, 11, 11, 0.7);
+		backdrop-filter: blur(3px);
+	}
+
+	.switchDesc {
+		height: auto;
+		color: #f6f4f1;
+		font-family: 'Changa One', sans-serif;
+		font-size: 2cqw;
+		text-shadow:
+			-1px -1px 0 black,
+			1px -1px 0 black,
+			-1px 1px 0 black,
+			1px 1px 0 black;
 	}
 </style>
