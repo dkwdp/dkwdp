@@ -5,7 +5,6 @@
 	export let levelId: LevelId;
 
 	function openLevelId() {
-		console.log(levelId);
 		if (page.params.mapId == null) throw new Error('mapId is null');
 		normalize_and_goto(levelId, page.params.mapId);
 	}

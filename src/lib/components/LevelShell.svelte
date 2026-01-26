@@ -18,15 +18,17 @@
 </script>
 
 <div class="page-root level-background">
+
+    <nav>
+        <button class="icon-button" on:click={navBack} aria-label="Karte"></button>
+    </nav>
+
 	<div class="column-left">
-		<nav>
-			<button class="icon-button" on:click={navBack} aria-label="Karte"></button>
-		</nav>
         <div class="previousLevel-wrapper">
-        {#if data.level.previous_level}
-            <PreviousLevelButton levelId={data.level.previous_level} />
-        {/if}
-    </div>
+            {#if data.level.previous_level}
+                <PreviousLevelButton levelId={data.level.previous_level} />
+            {/if}
+        </div>
 	</div>
 
 	<div class="column-center">
@@ -94,13 +96,10 @@
 
 
     .column-left {
-        flex: 0 0 auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 1rem;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
         padding-left: 1rem;
-        width: 10rem;
     }
 
     .column-center {
@@ -120,16 +119,6 @@
         width: 10rem;
         align-items: flex-end;
         padding-right: 1rem;
-    }
-
-    .previousLevel-wrapper {
-        flex: 0 0 auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 10rem;
-        align-items: flex-start;
-        padding-left: 1rem;
     }
 
     h1 {
