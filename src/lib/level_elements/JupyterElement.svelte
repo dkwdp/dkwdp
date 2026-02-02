@@ -32,7 +32,7 @@
 			pyodide.runPython('import sys; from io import StringIO');
 			
 			isReady = true;
-			output = 'Bereit';
+			output = '';
 		} catch (error) {
 			output = `Error: ${error}`;
 		}
@@ -53,15 +53,18 @@
 			const result = pyodide.runPython('sys.stdout.getvalue()');
 			output = result || 'Done';
 		} catch (error: any) {
-			output = `Error: ${error.message}`;
-		}
-	}
+			const errorMsg = error.message ;
+            const lines = errorMsg.split('\n').filter((line:string) => line.trim());
+            const lastLine = lines[lines.length - 1] ;
+            output = lastLine;
+        }
+    }
 </script>
 
 <div>
 	<h3>Code Editor</h3>
-	<textarea bind:value={code}></textarea>
-	<button onclick={runCode} disabled={!isReady}>Prüfen</button>
+	<textarea rows="3" bind:value={code}></textarea>
+	<button onclick={runCode} disabled={!isReady}>Run Code</button>
 	<pre>{output}</pre>
 </div>
 
@@ -72,6 +75,7 @@
 		margin: 10rem;
 		max-width: 800px;
 		width: 100%;
+		border-radius: 1.5rem;
 	}
 	h3 {
 		margin: 0 0 1rem 0;
@@ -82,6 +86,7 @@
 		min-height: 150px;
 		font-family: monospace;
 		box-sizing: border-box;
+		resize: none;
 	}
 	button {
 		width: 100%;
