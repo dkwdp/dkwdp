@@ -6,7 +6,7 @@ interface LevelIdImpl {
 
 export type LevelId = LevelIdImpl | string | null;
 
-export type ElementType = 'video'|'text'|'quiz'|'interactive'|'switch'|"button";
+export type ElementType = 'video'|'text'|'quiz'|'interactive'|'switch'|'button'|'jupyter';
 
 export interface LevelElementData {
 	type: ElementType,
@@ -54,6 +54,11 @@ export interface ButtonElementData extends LevelElementData {
 	url: string;
 	text: string;
 	target?: string;
+}
+
+export interface JupyterElementData extends LevelElementData {
+	type: 'jupyter';
+	initialCode: string;
 }
 
 export interface Level {

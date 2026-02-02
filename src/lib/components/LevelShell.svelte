@@ -8,6 +8,7 @@
 	import InteractiveElement from '$lib/level_elements/InteractiveElement.svelte';
 	import SwitchElement from '$lib/level_elements/SwitchElement.svelte';
 	import ButtonElement from '$lib/level_elements/ButtonElement.svelte';
+	import JupyterElement from '$lib/level_elements/JupyterElement.svelte';
 	import NextLevelButton from '$lib/level_elements/NextLevelButton.svelte';
 	import { navigateToMap } from '$lib/helpers';
 
@@ -37,6 +38,8 @@
 					<SwitchElement {element} />
 				{:else if element.type === 'button'}
 					<ButtonElement {element} />
+				{:else if element.type === 'jupyter'}
+					<JupyterElement {element} />
 				{/if}
 			{/each}
 		</div>

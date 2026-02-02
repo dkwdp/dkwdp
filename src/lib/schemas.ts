@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const ElementType = z.enum(
-	['video','text','quiz','interactive','switch','button']
+	['video','text','quiz','interactive','switch','button','jupyter']
 );
 
 export const LevelId = z.union([
@@ -56,6 +56,10 @@ export const LevelElement = z.discriminatedUnion('type', [
 		url: z.url(),
 		text: z.string(),
 		target: z.string().optional(),
+	}),
+	ElementBase.extend({
+		type: z.literal('jupyter'),
+		initialCode: z.string(),
 	})
 ]);
 
