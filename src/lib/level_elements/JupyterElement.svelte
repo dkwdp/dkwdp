@@ -1,6 +1,10 @@
 <script lang="ts">
 	import type { JupyterElementData } from '$lib/types';
 	import { onMount } from 'svelte';
+	import { EditorView, basicSetup } from 'codemirror';
+	import { python } from '@codemirror/lang-python';
+	import { indentWithTab } from '@codemirror/commands';
+	import { keymap } from '@codemirror/view';
 
 	interface Props {
 		element: JupyterElementData;
@@ -8,12 +12,35 @@
 
 	let { element } = $props() as Props;
 	
-	let code = $state(element.initialCode);
+	let code = element.initialCode;
 	let output = $state('');
 	let pyodide: any = null;
 	let isReady = $state(false);
+	let editorContainer: HTMLDivElement;
 
 	onMount(async () => {
+		let view: EditorView;
+		
+		view = new EditorView({
+			doc: code,
+			extensions: [
+				basicSetup,
+				python(),
+				EditorView.updateListener.of((update) => {
+					if (update.docChanged) {
+						code = update.state.doc.toString();
+					}
+				}),
+				keymap.of([indentWithTab]),
+				EditorView.theme({
+					'&': { backgroundColor: 'white' },
+					'.cm-content': { backgroundColor: 'white' },
+					'.cm-gutters': { backgroundColor: '#f5f5f5', color: '#999' }
+				})
+			],
+			parent: editorContainer
+		});
+
 		try {
 			output = 'Lädt...';
 			
@@ -32,10 +59,14 @@
 			pyodide.runPython('import sys; from io import StringIO');
 			
 			isReady = true;
-			output = '';
+			output = 'Bereit';
 		} catch (error) {
 			output = `Error: ${error}`;
 		}
+
+		return () => {
+			view.destroy();
+		};
 	});
 
 	async function runCode() {
@@ -53,6 +84,7 @@
 			const result = pyodide.runPython('sys.stdout.getvalue()');
 			output = result || 'Done';
 		} catch (error: any) {
+			// Extract last line 
 			const errorMsg = error.message ;
             const lines = errorMsg.split('\n').filter((line:string) => line.trim());
             const lastLine = lines[lines.length - 1] ;
@@ -61,32 +93,24 @@
     }
 </script>
 
-<div>
+<div class="jupyter-container">
 	<h3>Code Editor</h3>
-	<textarea rows="3" bind:value={code}></textarea>
-	<button onclick={runCode} disabled={!isReady}>Run Code</button>
+	<div bind:this={editorContainer}></div>
+	<button onclick={runCode} disabled={!isReady}>Prüfen</button>
 	<pre>{output}</pre>
 </div>
 
 <style>
-	div {
+	.jupyter-container {
 		border: 1px solid #ffffff;
 		padding: 1rem;
 		margin: 10rem;
 		max-width: 800px;
 		width: 100%;
-		border-radius: 1.5rem;
 	}
 	h3 {
 		margin: 0 0 1rem 0;
 		color: #f5f5f5;
-	}
-	textarea {
-		width: 100%;
-		min-height: 150px;
-		font-family: monospace;
-		box-sizing: border-box;
-		resize: none;
 	}
 	button {
 		width: 100%;
