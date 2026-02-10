@@ -6,5 +6,5 @@ export const load = async ({ params, fetch }) => {
   if (!res.ok) throw new Error('map structure not found');
   const json = await res.json();
   const parsed = MapSchema.parse(json) as MapStructure;
-  return { structure: parsed, mapId: params.mapId };
+  return { structure: parsed };
 };

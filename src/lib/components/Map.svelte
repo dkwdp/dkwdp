@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import type { MapStructure } from '$lib/types';
-	export let structure: MapStructure; // get map-data
+	import { mapState } from '$lib/mapStore.svelte';
+	export let structure: MapStructure; // get map-data 
 
 	// calculate number of rows and column
 	$: rows = structure.tiles.length; // $ --> new value with change of structure.tiles
@@ -51,6 +53,21 @@
 	let currentTranslateX = 0;
 	let currentTranslateY = 0;
 	
+	onMount(() => {
+		const saved = mapState.mapInfo[structure.id];
+		if (!saved) return;
+		zoom = saved.zoom;
+		translateX = saved.translateX;
+		translateY = saved.translateY;
+		currentTranslateX = translateX;
+		currentTranslateY = translateY;
+	});
+	
+	// save zoomlevel and position to store
+	function saveView() {
+		mapState.mapInfo[structure.id] = { zoom, translateX, translateY };
+	}
+	
 	function handleMouseDown(e: MouseEvent) {
 		isDragging = true;
 		hasMoved = false;
@@ -78,6 +95,7 @@
 		isDragging = false;
 		currentTranslateX = translateX;
 		currentTranslateY = translateY;
+		saveView();
 	}
 	
 	// zoom with mouse wheel
@@ -116,6 +134,7 @@
 		
 		currentTranslateX = translateX;
 		currentTranslateY = translateY;
+		saveView();
 	}
 
 	// get one tile out of the array
@@ -250,7 +269,7 @@
 
 		<!-- background-image -->
 		<img src={
-			structure.background} 
+			`/content/${structure.id}/${structure.background}`} 
 			alt={structure.title} 
 			class="map-bg"
 			draggable="false"
@@ -285,7 +304,7 @@
 			{/each}
 			
 			<!-- 2. set level-points -->
-			{#each structure.levels as level (level.id)}
+			{#each structure.levels as level, index (level.id)}
 				<a 
 					href={hasMoved ? undefined : resolve(`/map/${structure.id}/level/${level.id}`)}
 					class="level-node"
@@ -295,10 +314,12 @@
 					on:click={(e) => {
 						if (hasMoved) {
 							e.preventDefault();
+						} else {
+							mapState.highlightFirstLevel = false;
 						}
 					}}
 				>
-					<div class="dot"></div>
+					<div class="dot" class:highlighted={mapState.highlightFirstLevel && index === 0}></div>
 				</a>
 			{/each}
 			
@@ -417,4 +438,22 @@
 		background: #7AD8D8;
 		transform: scale(1.1);
 	}
+	
+	.dot.highlighted {
+		animation: pulse 1.5s ease-in-out infinite;
+		/*box-shadow: 0 0 15px rgba(0, 255, 255, 1);  */
+	}
+	.level-node:hover .dot.highlighted {
+		transform: scale(1.1);
+	}
+
+	@keyframes pulse {
+		0%, 100% { 
+			transform: scale(1.00); 
+		}
+		50% { 
+			transform: scale(1.35); 
+		}
+	}
+	
 </style>
