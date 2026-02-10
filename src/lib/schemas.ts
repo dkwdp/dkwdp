@@ -13,15 +13,6 @@ export const LevelId = z.union([
 	z.string()
 ]).nullable();
 
-export const PreviousLevelId = z.union([
-	z.object({
-		levelId: z.string(),
-		mapId: z.string().optional(),
-		serverUrl: z.url().optional(),
-	}),
-	z.string()
-]).nullable();
-
 export const ElementBase = z.object({
 	type: ElementType,
 });
@@ -84,7 +75,7 @@ export const Level = z.object({
 	id: z.string(),
 	title: z.string(),
 	next_level: LevelId,
-	previous_level: PreviousLevelId,
+	previous_level: LevelId,
 	elements: z.array(LevelElement),
 });
 

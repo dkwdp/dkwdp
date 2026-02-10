@@ -5,7 +5,6 @@ interface LevelIdImpl {
 }
 
 export type LevelId = LevelIdImpl | string | null;
-export type PreviousLevelId = LevelIdImpl | string | null;
 
 export type ElementType = 'video'|'text'|'quiz'|'interactive'|'switch'|"button";
 
