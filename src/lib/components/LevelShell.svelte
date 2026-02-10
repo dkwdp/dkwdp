@@ -19,16 +19,16 @@
 
 <div class="page-root level-background">
 
-    <nav>
-        <button class="icon-button" on:click={navBack} aria-label="Karte"></button>
-    </nav>
+	<nav>
+		<button class="icon-button" on:click={navBack} aria-label="Karte"></button>
+	</nav>
 
 	<div class="column-left">
-        <div class="previousLevel-wrapper">
-            {#if data.level.previous_level}
-                <PreviousLevelButton levelId={data.level.previous_level} />
-            {/if}
-        </div>
+		<div class="previousLevel-wrapper">
+			{#if data.level.previous_level}
+				<PreviousLevelButton levelId={data.level.previous_level} />
+			{/if}
+		</div>
 	</div>
 
 	<div class="column-center">
@@ -40,7 +40,7 @@
 				{:else if element.type === 'video'}
 					<VideoElement {element} />
 				{:else if element.type === 'interactive'}
-					<InteractiveElement element={element} level={data.level} mapId={data.mapId}/>
+					<InteractiveElement element={element} level={data.level} mapId={data.mapId} />
 				{:else if element.type === 'switch'}
 					<SwitchElement {element} />
 				{:else if element.type === 'button'}
