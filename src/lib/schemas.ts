@@ -19,6 +19,8 @@ export const ElementBase = z.object({
 export const NextLevelWithImage = z.object({
   levelId: LevelId,
   image: z.string(),
+  title: z.string().optional(),
+  description: z.string().optional()
 });
 
 export const LevelElement = z.discriminatedUnion('type', [

@@ -42,6 +42,8 @@ export interface InteractiveElementData extends LevelElementData {
 export interface NextLevelWithImage {
   levelId: LevelId;
   image: string;
+  title?: string;
+  description?: string;
 }
 
 export interface SwitchElementData extends LevelElementData {
