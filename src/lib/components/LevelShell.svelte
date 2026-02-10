@@ -9,6 +9,7 @@
 	import SwitchElement from '$lib/level_elements/SwitchElement.svelte';
 	import ButtonElement from '$lib/level_elements/ButtonElement.svelte';
 	import NextLevelButton from '$lib/level_elements/NextLevelButton.svelte';
+	import PreviousLevelButton from '$lib/level_elements/PreviousLevelButton.svelte';
 	import { navigateToMap } from '$lib/helpers';
 
 	function navBack() {
@@ -17,10 +18,17 @@
 </script>
 
 <div class="page-root level-background">
+
+	<nav>
+		<button class="icon-button" on:click={navBack} aria-label="Karte"></button>
+	</nav>
+
 	<div class="column-left">
-		<nav>
-			<button class="icon-button" on:click={navBack} aria-label="Karte"></button>
-		</nav>
+		<div class="previousLevel-wrapper">
+			{#if data.level.previous_level}
+				<PreviousLevelButton levelId={data.level.previous_level} />
+			{/if}
+		</div>
 	</div>
 
 	<div class="column-center">
@@ -32,7 +40,7 @@
 				{:else if element.type === 'video'}
 					<VideoElement {element} />
 				{:else if element.type === 'interactive'}
-					<InteractiveElement element={element} level={data.level} mapId={data.mapId}/>
+					<InteractiveElement element={element} level={data.level} mapId={data.mapId} />
 				{:else if element.type === 'switch'}
 					<SwitchElement {element} />
 				{:else if element.type === 'button'}
@@ -88,13 +96,10 @@
 
 
     .column-left {
-        flex: 0 0 auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 1rem;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
         padding-left: 1rem;
-        width: 10rem;
     }
 
     .column-center {

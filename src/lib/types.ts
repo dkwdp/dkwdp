@@ -62,6 +62,7 @@ export interface Level {
 	id: string,
 	title: string,
 	next_level?: LevelId,
+	previous_level?: LevelId,
 	elements: LevelElementData[],
 }
 
