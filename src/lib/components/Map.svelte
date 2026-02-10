@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
 	import type { MapStructure } from '$lib/types';
-	import { mapHighlightState } from '$lib/mapHighlightStore.svelte';
+	import { mapState } from '$lib/mapStore.svelte';
 	export let structure: MapStructure; // get map-data 
 
 	// calculate number of rows and column
@@ -54,20 +54,18 @@
 	let currentTranslateY = 0;
 	
 	onMount(() => {
-		const saved = localStorage.getItem(`map-view-${structure.id}`);
+		const saved = mapState.mapInfo[structure.id];
 		if (!saved) return;
-		try {
-			({ zoom, translateX, translateY } = JSON.parse(saved));
-			currentTranslateX = translateX;
-			currentTranslateY = translateY;
-		} catch (err) {
-			console.log('Failed to load map view:', err);
-		}
+		zoom = saved.zoom;
+		translateX = saved.translateX;
+		translateY = saved.translateY;
+		currentTranslateX = translateX;
+		currentTranslateY = translateY;
 	});
 	
-	// save zoomlevel and position to localstorage
+	// save zoomlevel and position to store
 	function saveView() {
-		localStorage.setItem(`map-view-${structure.id}`, JSON.stringify({ zoom, translateX, translateY }));
+		mapState.mapInfo[structure.id] = { zoom, translateX, translateY };
 	}
 	
 	function handleMouseDown(e: MouseEvent) {
@@ -317,11 +315,11 @@
 						if (hasMoved) {
 							e.preventDefault();
 						} else {
-							mapHighlightState.highlightFirstLevel = false;
+							mapState.highlightFirstLevel = false;
 						}
 					}}
 				>
-					<div class="dot" class:highlighted={mapHighlightState.highlightFirstLevel && index === 0}></div>
+					<div class="dot" class:highlighted={mapState.highlightFirstLevel && index === 0}></div>
 				</a>
 			{/each}
 			
