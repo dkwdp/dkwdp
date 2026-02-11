@@ -1,6 +1,6 @@
 {
   "id": "switch01",
-  "title": "Level: Spiele oder Geschichten?",
+  "title": "Wie soll es weiter gehen?",
   "next_level": null,
   "previous_level": "coordinate_systems",
   "elements": [
@@ -13,7 +13,7 @@
             "mapId": "map01"
           },
           "image": "kreativ.png",
-          "title": "Kreativ sein"
+          "title": "Malen und Musik"
         },
         {
           "levelId": {
@@ -21,8 +21,7 @@
             "mapId": "map01"
           },
           "image": "hands-on.png",
-          "title": "Dinge bewegen",
-          "description": "Beschreibung"
+          "title": "Bewegung und Interaktion"
         }
       ]
     }

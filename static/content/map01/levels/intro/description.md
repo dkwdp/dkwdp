@@ -1,7 +1,11 @@
-# Testtestetestst
+Hier zeigen wir dir, wie man Spiele mit Scratch entwickeln kann.
 
-test **test**  *amigo* *nice!!* 
+**Drücke auf den Start Knopf, um Scratch zu öffnen!**
 
-- *Punkt 1*
-- Punkt 2
- 
+Was du hier lernen kannst:
+- Sprache einstellen
+- Übersicht Benutzeroberfläche
+- Wo sind meine Figuren
+- Blöcke
+
+Viel Spaß!

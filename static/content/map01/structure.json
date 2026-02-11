@@ -1,6 +1,6 @@
 {
   "id": "map01",
-  "title": "Map: Scratch erste Schritte",
+  "title": "Einführung Scratch",
   "background": "background.jpg",
   "levels": [
     { "id": "intro", "title": "Welcome", "pos": [1, 0] },
@@ -9,8 +9,8 @@
   ],
   "tiles": [
     "  r---7 ",
-    "-Tq r-+-",
-    " 'L-q I ",
+    "--q r-+-",
+    "  L-q I ",
     "    L-J "
   ]
 }
