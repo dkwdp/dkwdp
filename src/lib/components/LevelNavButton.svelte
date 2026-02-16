@@ -18,7 +18,6 @@
 <style>
     .c-navButton {
         color: #094579;
-        cursor: pointer;
         background-color: #018cd5;
         height: 28rem;
         width: 6rem;

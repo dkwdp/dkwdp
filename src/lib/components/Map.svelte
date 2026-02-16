@@ -431,7 +431,6 @@
 		border: 4px solid #005E91;
 		transition: background 0.2s, transform 0.2s;
 		pointer-events: auto;
-		cursor: pointer;
 	}
 	
 	.level-node:hover .dot {
