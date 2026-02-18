@@ -38,7 +38,6 @@
 <style>
 	button {
 		color: #f6f4f1;
-		cursor: pointer;
 		background-color: #29be1a;
 		height: 5rem;
 		width: 13rem;
