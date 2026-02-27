@@ -50,7 +50,6 @@
 	}
 
 	.imageButton:hover {
-		transform: translateY(3px);
 		box-shadow: 0 3px var(--dark-900);
 	}
 

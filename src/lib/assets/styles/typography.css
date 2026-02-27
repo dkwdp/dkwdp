@@ -1,3 +1,5 @@
+@import 'colors.css';
+
 html,
 body {
 	margin: 0;
@@ -5,4 +7,16 @@ body {
 	font-family:
 		OCR A Std,
 		monospace;
+}
+
+h1 {
+	color: var(--white);
+}
+
+button {
+	cursor: pointer;
+}
+
+button:hover {
+	transform: translateY(3px);
 }

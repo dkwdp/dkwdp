@@ -17,30 +17,26 @@
 	}
 </script>
 
-<div class="page-root level-background">
-
-	<nav>
-		<button class="icon-button" on:click={navBack} aria-label="Karte"></button>
-	</nav>
-
-	<div class="column-left">
-		<div class="previousLevel-wrapper">
-			{#if data.level.previous_level}
-				<PreviousLevelButton levelId={data.level.previous_level} />
-			{/if}
-		</div>
+<div class="levelShell level-background">
+	<div class="levelShell_left">
+		<nav>
+			<button class="levelShell_mapButton" on:click={navBack} aria-label="Karte"></button>
+		</nav>
+		{#if data.level.previous_level}
+			<PreviousLevelButton levelId={data.level.previous_level} />
+		{/if}
 	</div>
 
-	<div class="column-center">
-		<h1 class="text-2xl font-bold">{data.level.title}</h1>
-		<div class="elements-stack space-y-4">
+	<div class="levelShell_center">
+		<h1>{data.level.title}</h1>
+		<div class="levelShell_elementsStack">
 			{#each data.level.elements as element, i (i)}
 				{#if element.type === 'text'}
 					<TextElement {element} />
 				{:else if element.type === 'video'}
 					<VideoElement {element} />
 				{:else if element.type === 'interactive'}
-					<InteractiveElement element={element} level={data.level} mapId={data.mapId} />
+					<InteractiveElement {element} level={data.level} mapId={data.mapId} />
 				{:else if element.type === 'switch'}
 					<SwitchElement {element} />
 				{:else if element.type === 'button'}
@@ -50,109 +46,106 @@
 		</div>
 	</div>
 
-	<div class="column-right">
-		<div class="nextLevel-wrapper">
+	<div class="levelShell_right">
+		<div>
 			{#if data.level.next_level}
 				<NextLevelButton levelId={data.level.next_level} />
 			{/if}
 		</div>
 	</div>
-
-	<slot />
 </div>
 
 <style>
-    .level-background {
-        background-color: var(--bg-dark);
-        background-image: linear-gradient(var(--bg-grad-1), var(--bg-grad-1)), linear-gradient(var(--bg-grad-2), var(--bg-grad-2)),
-        url('/images/patternFlower.png'),
-        linear-gradient(to right, var(--bg-grad-left) 0%, var(--bg-grad-mid) 20%, var(--bg-grad-mid) 80%, var(--bg-grad-left) 100%);
+	.level-background {
+		background-color: var(--bg-dark);
+		background-image:
+			url('/images/patternFlower.png'),
+			linear-gradient(
+				to right,
+				var(--bg-grad-left) 0%,
+				var(--bg-grad-mid) 20%,
+				var(--bg-grad-mid) 80%,
+				var(--bg-grad-left) 100%
+			);
 
-        background-size: 60vw 100%,
-        61vw 100%,
-        auto,
-        auto;
+		background-repeat: repeat, no-repeat;
+		background-position:
+			0 0,
+			0 0;
+		background-size: auto, auto;
 
-        background-position: center center,
-        center center,
-        0 0,
-        0 0;
+		min-height: 100vh;
+		margin: 0;
+	}
+	.levelShell {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		position: relative;
+	}
 
-        background-repeat: no-repeat, no-repeat, repeat, no-repeat;
-        min-height: 100vh;
-        margin: 0;
-    }
+	.levelShell_center {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		min-width: 75%;
 
-    .page-root {
-        min-height: 100vh;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: stretch;
-        box-sizing: border-box;
-        padding: 1rem;
-    }
+		background-image:
+			linear-gradient(var(--bg-grad-1), var(--bg-grad-1)),
+			linear-gradient(var(--bg-grad-2), var(--bg-grad-2));
 
+		background-repeat: no-repeat, no-repeat;
+		background-size:
+			98% 100%,
+			100% 100%;
+		background-position:
+			center center,
+			center center;
+	}
+	.levelShell_left,
+	.levelShell_right {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 1rem 1rem 0 1rem;
+	}
 
-    .column-left {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        padding-left: 1rem;
-    }
+	h1 {
+		text-align: center;
+		margin-top: 2rem;
+		margin-bottom: 2rem;
+	}
 
-    .column-center {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        max-width: 60rem;
-        min-width: 0;
-    }
+	.levelShell_mapButton {
+		position: absolute;
+		left: 1rem;
+		top: 1rem;
+		background-color: var(--accent);
+		background-image: url('/images/map.png');
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+		width: clamp(4rem, 2.667rem + 5.926vw, 8rem);
+		aspect-ratio: 4 / 3;
+		border-radius: 12px;
+		border: 3px solid var(--accent-border);
+		box-shadow: 0 6px var(--accent-border);
+		transition:
+			transform 0.1s ease-out,
+			box-shadow 0.1s ease-out;
+	}
 
-    .column-right {
-        flex: 0 0 auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 10rem;
-        align-items: flex-end;
-        padding-right: 1rem;
-    }
+	.levelShell_mapButton:hover {
+		transform: translateY(3px);
+		box-shadow: 0 3px var(--accent-border);
+	}
 
-    h1 {
-        color: var(--white);
-        text-align: center;
-        margin-top: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    .icon-button {
-        background-color: var(--accent);
-        background-image: url('/images/map.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        width: 8rem;
-        height: 6rem;
-        border-radius: 12px;
-        border: 3px solid var(--accent-border);
-        box-shadow: 0 6px var(--accent-border);
-        transition: transform 0.1s ease-out,
-        box-shadow 0.1s ease-out;
-    }
-
-    .icon-button:hover {
-        transform: translateY(3px);
-        box-shadow: 0 3px var(--accent-border);
-    }
-
-    .elements-stack {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-    }
+	.levelShell_elementsStack {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+	}
 </style>

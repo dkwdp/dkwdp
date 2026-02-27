@@ -58,7 +58,6 @@
 			box-shadow 0.1s ease-out;
 	}
 	button:hover {
-		transform: translateY(3px);
 		box-shadow: 0px 3px var(--green-shadow);
 	}
 </style>
