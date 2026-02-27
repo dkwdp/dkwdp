@@ -41,8 +41,8 @@
 		background: none;
 		display: inline-block;
 		border-radius: 12px;
-		border: 3px solid #0b0b0b;
-		box-shadow: 0 6px #0b0b0b;
+		border: 3px solid var(--dark-900);
+		box-shadow: 0 6px var(--dark-900);
 
 		transition:
 			transform 0.1s ease-out,
@@ -52,7 +52,7 @@
 
 	.imageButton:hover {
 		transform: translateY(3px);
-		box-shadow: 0 3px #0b0b0b;
+		box-shadow: 0 3px var(--dark-900);
 	}
 
 	.two .imageButton {
@@ -84,14 +84,14 @@
 		position: absolute;
 		width: 100%;
 		height: auto;
-		color: #f6f4f1;
+		color: var(--text-light);
 		font-family: 'Changa One', sans-serif;
 		font-size: 3cqw;
 		text-shadow:
-			-1px -1px 0 black,
-			1px -1px 0 black,
-			-1px 1px 0 black,
-			1px 1px 0 black;
+			-1px -1px 0 var(--black),
+			1px -1px 0 var(--black),
+			-1px 1px 0 var(--black),
+			1px 1px 0 var(--black);
 	}
 
 	.descBox {
@@ -99,19 +99,19 @@
 		left: 0%;
 		position: absolute;
 		width: 100%;
-		background-color: rgba(11, 11, 11, 0.7);
+		background-color: var(--dark-900-70);
 		backdrop-filter: blur(3px);
 	}
 
 	.switchDesc {
 		height: auto;
-		color: #f6f4f1;
+		color: var(--text-light);
 		font-family: 'Changa One', sans-serif;
 		font-size: 2cqw;
 		text-shadow:
-			-1px -1px 0 black,
-			1px -1px 0 black,
-			-1px 1px 0 black,
-			1px 1px 0 black;
+			-1px -1px 0 var(--black),
+			1px -1px 0 var(--black),
+			-1px 1px 0 var(--black),
+			1px 1px 0 var(--black);
 	}
 </style>

@@ -14,16 +14,16 @@
 
 <style>
 	button {
-		color: #094579;
+		color: var(--cyan-700);
 		cursor: pointer;
-		background-color: #018cd5;
+		background-color: var(--accent);
 		height: 28rem;
 		width: 6rem;
 		font-size: 5rem;
 		border-radius: 1rem;
-		border: 2px solid #004c61;
+		border: 2px solid var(--cyan-700);
 		font-family: 'Changa One', sans-serif;
-		box-shadow: 0px 6px #092230;
+		box-shadow: 0px 6px var(--dark-900);
 		justify-content: center;
 
 		transition:
@@ -32,6 +32,6 @@
 	}
 	button:hover {
 		transform: translateY(3px);
-		box-shadow: 0px 3px #092230;
+		box-shadow: 0px 3px var(--dark-900);
 	}
 </style>

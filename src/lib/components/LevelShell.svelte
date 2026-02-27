@@ -63,10 +63,10 @@
 
 <style>
     .level-background {
-        background-color: #072a41;
-        background-image: linear-gradient(#12567b, #12567b), linear-gradient(#0f5171, #0f5171),
+        background-color: var(--bg-dark);
+        background-image: linear-gradient(var(--bg-grad-1), var(--bg-grad-1)), linear-gradient(var(--bg-grad-2), var(--bg-grad-2)),
         url('/images/patternFlower.png'),
-        linear-gradient(to right, #02428a 0%, #1f72a6 20%, #1f72a6 80%, #02428a 100%);
+        linear-gradient(to right, var(--bg-grad-left) 0%, var(--bg-grad-mid) 20%, var(--bg-grad-mid) 80%, var(--bg-grad-left) 100%);
 
         background-size: 60vw 100%,
         61vw 100%,
@@ -122,14 +122,14 @@
     }
 
     h1 {
-        color: white;
+        color: var(--white);
         text-align: center;
         margin-top: 2rem;
         margin-bottom: 2rem;
     }
 
     .icon-button {
-        background-color: #018cd5;
+        background-color: var(--accent);
         background-image: url('/images/map.png');
         background-repeat: no-repeat;
         background-size: contain;
@@ -137,8 +137,8 @@
         width: 8rem;
         height: 6rem;
         border-radius: 12px;
-        border: 3px solid #002b63;
-        box-shadow: 0 6px #002b63;
+        border: 3px solid var(--accent-border);
+        box-shadow: 0 6px var(--accent-border);
         transition: transform 0.1s ease-out,
         box-shadow 0.1s ease-out;
         cursor: pointer;
@@ -146,7 +146,7 @@
 
     .icon-button:hover {
         transform: translateY(3px);
-        box-shadow: 0 3px #002b63;
+        box-shadow: 0 3px var(--accent-border);
     }
 
     .elements-stack {

@@ -338,7 +338,7 @@
 		width: 100vw;
 		height: 100vh;
 		overflow: hidden;
-		background: #c9c9af;
+		background: var(--map-bg);
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -351,10 +351,10 @@
 		transform: translateX(-50%);
 		z-index: 100;
 		margin: 0;
-		color: white;
+		color: var(--white);
 		font-size: clamp(1.5rem, 4vw, 2.5rem);
 		pointer-events: none;
-		text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+		text-shadow: 2px 2px 4px var(--map-shadow);
 	}
 	
 	.map-viewport {
@@ -426,16 +426,16 @@
 	.dot {
 		width: 4rem;
 		height: 4rem;
-		background: #0088D2;
+		background: var(--cyan-500);
 		border-radius: 50%;
-		border: 4px solid #005E91;
+		border: 4px solid var(--cyan-700);
 		transition: background 0.2s, transform 0.2s;
 		pointer-events: auto;
 		cursor: pointer;
 	}
 	
 	.level-node:hover .dot {
-		background: #7AD8D8;
+		background: var(--cyan-300);
 		transform: scale(1.1);
 	}
 	

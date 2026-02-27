@@ -15,7 +15,7 @@
 	padding: 1rem;
 	line-height: 1.6;
 	font-family: Arial, sans-serif;
-	color: rgb(255, 255, 255); 
+	color: var(--white);
 	}
 
 </style>
