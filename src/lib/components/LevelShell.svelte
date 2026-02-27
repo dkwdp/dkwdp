@@ -88,8 +88,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		min-width: 75%;
-
+		flex: 1;
 		background-image:
 			linear-gradient(var(--bg-grad-1), var(--bg-grad-1)),
 			linear-gradient(var(--bg-grad-2), var(--bg-grad-2));
@@ -109,6 +108,8 @@
 		justify-content: center;
 		align-items: center;
 		padding: 1rem 1rem 0 1rem;
+		flex: 0 0 clamp(6rem, 12vw, 12rem);
+		width: clamp(6rem, 12vw, 12rem);
 	}
 
 	h1 {
