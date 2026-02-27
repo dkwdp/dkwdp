@@ -47,7 +47,6 @@
     font-weight: 700;
     border: none;
     border-radius: 12px;
-    cursor: pointer;
     text-decoration: none;
     display: inline-block;
     text-align: center;

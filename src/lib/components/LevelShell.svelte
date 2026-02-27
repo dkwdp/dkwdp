@@ -141,7 +141,6 @@
         box-shadow: 0 6px var(--accent-border);
         transition: transform 0.1s ease-out,
         box-shadow 0.1s ease-out;
-        cursor: pointer;
     }
 
     .icon-button:hover {

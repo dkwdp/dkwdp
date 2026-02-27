@@ -38,7 +38,6 @@
 <style>
 	button {
 		color: var(--text-light);
-		cursor: pointer;
 		background-color: var(--green-500);
 		height: 5rem;
 		width: 13rem;

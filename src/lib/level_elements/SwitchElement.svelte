@@ -47,7 +47,6 @@
 		transition:
 			transform 0.1s ease-out,
 			box-shadow 0.1s ease-out;
-		cursor: pointer;
 	}
 
 	.imageButton:hover {
