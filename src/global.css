@@ -1,8 +1,2 @@
-@import "$lib/assets/styles/colors.css";
-
-html,
-body {
-    margin: 0;
-    padding: 0;
-    font-family: OCR A Std, monospace;
-}
+@import '$lib/assets/styles/colors.css';
+@import '$lib/assets/styles/typography.css';
