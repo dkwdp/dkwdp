@@ -17,22 +17,29 @@
 
 <style>
 	.c-navButton {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		color: #094579;
 		background-color: #018cd5;
-		height: 28rem;
-		width: 100%;
-		max-width: 6rem;
-		font-size: 5rem;
+		height: clamp(8rem, 1.333rem + 29.63vw, 28rem);
+		width: clamp(2rem, 0.667rem + 5.926vw, 6rem);
+		font-size: clamp(1.75rem, 0.667rem + 4.815vw, 5rem);
 		border-radius: 1rem;
 		border: 2px solid #004c61;
 		font-family: 'Changa One', sans-serif;
 		box-shadow: 0px 6px #092230;
-		justify-content: center;
-
 		transition:
 			transform 0.1s ease-out,
 			box-shadow 0.1s ease-out;
 	}
+
+	@media (max-width: var(--tp)) {
+		.c-navButton {
+			height: 14rem;
+		}
+	}
+
 	.c-navButton:hover {
 		box-shadow: 0px 3px #092230;
 	}
