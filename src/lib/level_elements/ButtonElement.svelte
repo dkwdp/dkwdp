@@ -39,9 +39,9 @@
 	button {
 		color: var(--text-light);
 		background-color: var(--green-500);
-		height: 5rem;
-		width: 13rem;
-		font-size: 3rem;
+		height: clamp(3rem, 1.571rem + 3.81vw, 5rem);
+		width: clamp(8rem, 4.429rem + 9.524vw, 13rem);
+		font-size: clamp(1.5rem, 0.429rem + 2.857vw, 3rem);
 		border-radius: 2rem;
 		border: 2px solid var(--green-700);
 		font-family: 'Changa One', sans-serif;

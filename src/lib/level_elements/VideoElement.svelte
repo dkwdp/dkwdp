@@ -27,7 +27,7 @@
 		display: flex;
 		justify-content: center;
 		width: 100%;
-		max-width: 1080px;
+		max-width: var(--tlsw);
 		margin: 0 auto;
 	}
 
