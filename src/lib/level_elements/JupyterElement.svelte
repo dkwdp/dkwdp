@@ -5,6 +5,7 @@
 	import { python } from '@codemirror/lang-python';
 	import { indentWithTab } from '@codemirror/commands';
 	import { keymap } from '@codemirror/view';
+	import { oneDark } from "@codemirror/theme-one-dark";
 
 	interface Props {
 		element: JupyterElementData;
@@ -32,11 +33,7 @@
 					}
 				}),
 				keymap.of([indentWithTab]),
-				EditorView.theme({
-					'&': { backgroundColor: 'white' },
-					'.cm-content': { backgroundColor: 'white' },
-					'.cm-gutters': { backgroundColor: '#f5f5f5', color: '#999' }
-				})
+				oneDark
 			],
 			parent: editorContainer
 		});
@@ -54,8 +51,29 @@
 			});
 			
 			pyodide = await (window as any).loadPyodide();
+
+			await pyodide.loadPackage("numpy");
+
+			pyodide.FS.mkdir("/dojosw");
+
+			const files = [
+				"__init__.py",
+				"music.py",
+				"musik.py",
+				"roboter.py"
+			];
+
+			for (const file of files) {
+				const response = await fetch(`/python-libs/dojosw/${file}`);
+				const content = await response.text();
+				pyodide.FS.writeFile(`/dojosw/${file}`, content);
+			}
+
+			pyodide.runPython(`
+				import sys
+				sys.path.append("/")
+			`);
 			
-			// Setup stdout once at start
 			pyodide.runPython('import sys; from io import StringIO');
 			
 			isReady = true;
@@ -70,27 +88,43 @@
 	});
 
 	async function runCode() {
-		if (!isReady) return;
-		try {
-			output = 'Lädt';
-			
-			// Redirect stdout to capture print()
-			pyodide.runPython('sys.stdout = StringIO()');
-			
-			// Execute user code
-			pyodide.runPython(code);
-			
-			// Get output
-			const result = pyodide.runPython('sys.stdout.getvalue()');
-			output = result || 'Done';
-		} catch (error: any) {
-			// Extract last line 
-			const errorMsg = error.message ;
-            const lines = errorMsg.split('\n').filter((line:string) => line.trim());
-            const lastLine = lines[lines.length - 1] ;
-            output = lastLine;
-        }
-    }
+	if (!isReady) return;
+
+	try {
+		output = 'Lädt';
+
+		pyodide.runPython('sys.stdout = StringIO()');
+
+		const result = pyodide.runPython(code);
+		const jsResult = result && result.toJs ? result.toJs() : result;
+
+		const textOutput = pyodide.runPython('sys.stdout.getvalue()');
+
+		if (Array.isArray(jsResult)) {
+			const audioCtx = new AudioContext();
+			const buffer = audioCtx.createBuffer(1, result.length, 44100);
+			const data = buffer.getChannelData(0);
+
+			for (let i = 0; i < result.length; i++) {
+				data[i] = result[i];
+			}
+
+			const source = audioCtx.createBufferSource();
+			source.buffer = buffer;
+			source.connect(audioCtx.destination);
+			source.start();
+
+			output = textOutput || "Playing sound...";
+			return;
+		}
+
+		output = textOutput || 'Done';
+
+	} catch (error: any) {
+		const lines = error.message.split('\n').filter((line: string) => line.trim());
+		output = lines[lines.length - 1];
+	}
+}
 </script>
 
 <div class="jupyter-container">

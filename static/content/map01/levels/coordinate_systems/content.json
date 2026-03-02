@@ -5,7 +5,7 @@
   "elements": [
     {
       "type": "jupyter",
-      "initialCode": "# Dein erstes Python Programm\nprint('Hallo Welt!')"
+      "initialCode": "from dojosw import music\nmusic.tone(0, 1.0)\nmusic.play()"
     }
   ]
 }
