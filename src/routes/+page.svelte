@@ -40,14 +40,13 @@
   }
 
   .start-button {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--danger-500) 0%, var(--danger-600) 100%);
+    color: var(--white);
     padding: 13px 22px;
     font-size: 1.2rem;
     font-weight: 700;
     border: none;
     border-radius: 12px;
-    cursor: pointer;
     text-decoration: none;
     display: inline-block;
     text-align: center;
@@ -56,13 +55,13 @@
   }
 
   .start-button:hover {
-    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+    background: linear-gradient(135deg, var(--danger-600) 0%, var(--danger-700) 100%);
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.5);
+    box-shadow: 0 8px 25px var(--danger-shadow);
   }
 
   .start-button:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+    box-shadow: 0 0 0 3px var(--danger-outline);
   }
 </style>
