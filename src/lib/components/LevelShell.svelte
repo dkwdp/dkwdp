@@ -10,47 +10,43 @@
 	import ButtonElement from '$lib/level_elements/ButtonElement.svelte';
 	import NextLevelButton from '$lib/level_elements/NextLevelButton.svelte';
 	import PreviousLevelButton from '$lib/level_elements/PreviousLevelButton.svelte';
-	import { navigateToMap } from '$lib/helpers';
-
-	function navBack() {
-		navigateToMap();
-	}
+	import Header from './global/Header.svelte';
 </script>
 
 <div class="levelShell level-background">
-	<div class="levelShell_left">
-		<nav>
-			<button class="levelShell_mapButton" on:click={navBack} aria-label="Karte"></button>
-		</nav>
-		{#if data.level.previous_level}
-			<PreviousLevelButton levelId={data.level.previous_level} />
-		{/if}
-	</div>
-
-	<div class="levelShell_center">
-		<h1>{data.level.title}</h1>
-		<div class="levelShell_elementsStack">
-			{#each data.level.elements as element, i (i)}
-				{#if element.type === 'text'}
-					<TextElement {element} />
-				{:else if element.type === 'video'}
-					<VideoElement {element} />
-				{:else if element.type === 'interactive'}
-					<InteractiveElement {element} level={data.level} mapId={data.mapId} />
-				{:else if element.type === 'switch'}
-					<SwitchElement {element} />
-				{:else if element.type === 'button'}
-					<ButtonElement {element} />
-				{/if}
-			{/each}
-		</div>
-	</div>
-
-	<div class="levelShell_right">
-		<div>
-			{#if data.level.next_level}
-				<NextLevelButton levelId={data.level.next_level} />
+	<div class="levelShell_top"><Header></Header></div>
+	<div class="levelShell_bottom">
+		<div class="levelShell_left">
+			{#if data.level.previous_level}
+				<PreviousLevelButton levelId={data.level.previous_level} />
 			{/if}
+		</div>
+
+		<div class="levelShell_center">
+			<h1>{data.level.title}</h1>
+			<div class="levelShell_elementsStack">
+				{#each data.level.elements as element, i (i)}
+					{#if element.type === 'text'}
+						<TextElement {element} />
+					{:else if element.type === 'video'}
+						<VideoElement {element} />
+					{:else if element.type === 'interactive'}
+						<InteractiveElement {element} level={data.level} mapId={data.mapId} />
+					{:else if element.type === 'switch'}
+						<SwitchElement {element} />
+					{:else if element.type === 'button'}
+						<ButtonElement {element} />
+					{/if}
+				{/each}
+			</div>
+		</div>
+
+		<div class="levelShell_right">
+			<div>
+				{#if data.level.next_level}
+					<NextLevelButton levelId={data.level.next_level} />
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>
@@ -58,26 +54,30 @@
 <style>
 	.level-background {
 		background-color: var(--bg-dark);
-		background-image:
-			url('/images/patternFlower.png'),
-			linear-gradient(
-				to right,
-				var(--bg-grad-left) 0%,
-				var(--bg-grad-mid) 20%,
-				var(--bg-grad-mid) 80%,
-				var(--bg-grad-left) 100%
-			);
+		background-image: linear-gradient(
+			to right,
+			var(--bg-grad-left) 0%,
+			var(--bg-grad-mid) 20%,
+			var(--bg-grad-mid) 80%,
+			var(--bg-grad-left) 100%
+		);
 
 		background-repeat: repeat, no-repeat;
 		background-position:
 			0 0,
 			0 0;
 		background-size: auto, auto;
-
+		opacity: 20%, 100%;
 		min-height: 100vh;
 		margin: 0;
 	}
 	.levelShell {
+		display: flex;
+		flex-direction: column;
+		position: relative;
+	}
+
+	.levelShell_bottom {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
@@ -89,9 +89,6 @@
 		flex-direction: column;
 		align-items: center;
 		flex: 1;
-		background-image:
-			linear-gradient(var(--bg-grad-1), var(--bg-grad-1)),
-			linear-gradient(var(--bg-grad-2), var(--bg-grad-2));
 
 		background-repeat: no-repeat, no-repeat;
 		background-size:
@@ -116,30 +113,6 @@
 		text-align: center;
 		margin-top: 2rem;
 		margin-bottom: 2rem;
-	}
-
-	.levelShell_mapButton {
-		position: absolute;
-		left: 1rem;
-		top: 1rem;
-		background-color: var(--accent);
-		background-image: url('/images/map.png');
-		background-repeat: no-repeat;
-		background-size: contain;
-		background-position: center;
-		width: clamp(4rem, 2.667rem + 5.926vw, 8rem);
-		aspect-ratio: 4 / 3;
-		border-radius: 12px;
-		border: 3px solid var(--accent-border);
-		box-shadow: 0 6px var(--accent-border);
-		transition:
-			transform 0.1s ease-out,
-			box-shadow 0.1s ease-out;
-	}
-
-	.levelShell_mapButton:hover {
-		transform: translateY(3px);
-		box-shadow: 0 3px var(--accent-border);
 	}
 
 	.levelShell_elementsStack {
