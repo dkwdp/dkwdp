@@ -12,39 +12,53 @@
 	import PreviousLevelButton from '$lib/level_elements/PreviousLevelButton.svelte';
 	import Header from './global/Header.svelte';
 	import RotateDevice from './RotateDevice.svelte';
+	import { fly } from 'svelte/transition';
+
+	let direction = 1;
 </script>
 
 <div class="levelShell">
-	<Header headerTitle={data.level.title}></Header>
-	<RotateDevice></RotateDevice>
+	<Header headerTitle={data.level.title} />
+	<RotateDevice />
 	<div class="levelShell_content">
 		<div class="levelShell_left">
 			{#if data.level.previous_level}
-				<PreviousLevelButton levelId={data.level.previous_level} />
+				<PreviousLevelButton
+					levelId={data.level.previous_level}
+					on:click={() => (direction = -1)}
+				/>
 			{/if}
 		</div>
 
 		<div class="levelShell_center">
-			<div class="levelShell_elementsStack">
-				{#each data.level.elements as element, i (i)}
-					{#if element.type === 'text'}
-						<TextElement {element} />
-					{:else if element.type === 'video'}
-						<VideoElement {element} />
-					{:else if element.type === 'interactive'}
-						<InteractiveElement {element} level={data.level} mapId={data.mapId} />
-					{:else if element.type === 'switch'}
-						<SwitchElement {element} />
-					{:else if element.type === 'button'}
-						<ButtonElement {element} />
-					{/if}
-				{/each}
-			</div>
+			{#key data.level.id}
+				<div
+					class="levelShell_centerInner"
+					in:fly={{ x: 150 * direction, duration: 600 }}
+					out:fly={{ x: -150 * direction, duration: 600 }}
+				>
+					<div class="levelShell_elementsStack">
+						{#each data.level.elements as element, i (i)}
+							{#if element.type === 'text'}
+								<TextElement {element} />
+							{:else if element.type === 'video'}
+								<VideoElement {element} />
+							{:else if element.type === 'interactive'}
+								<InteractiveElement {element} level={data.level} mapId={data.mapId} />
+							{:else if element.type === 'switch'}
+								<SwitchElement {element} />
+							{:else if element.type === 'button'}
+								<ButtonElement {element} />
+							{/if}
+						{/each}
+					</div>
+				</div>
+			{/key}
 		</div>
 
 		<div class="levelShell_right">
 			{#if data.level.next_level}
-				<NextLevelButton levelId={data.level.next_level} />
+				<NextLevelButton levelId={data.level.next_level} on:click={() => (direction = 1)} />
 			{/if}
 		</div>
 	</div>
@@ -77,9 +91,16 @@
 		box-shadow: 0 0 50px rgba(59, 130, 246, 0.2); /* TODO: Glow Ja / Nein ? */
 		padding: 30px;
 		text-align: center;
-		margin: 2rem 0;
+		min-width: 0;
+		width: 100%;
+		margin: 2rem 1rem;
 		overflow-y: auto;
 		scrollbar-width: none;
+	}
+
+	.levelShell_centerInner {
+		width: 100%;
+		height: 100%;
 	}
 	.levelShell_left,
 	.levelShell_right {

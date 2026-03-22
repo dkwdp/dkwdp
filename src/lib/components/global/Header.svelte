@@ -35,17 +35,22 @@
 		height: 8vh;
 		aspect-ratio: 4 / 3;
 		border: none;
+		background-color: rgba(255, 255, 255, 0.1);
+		border-radius: 10px;
 		transition: all 0.3s;
 	}
 	.header_mapButton:hover {
 		transform: scale(1.1);
-		background-color: rgba(255, 255, 255, 0.1);
-		border-radius: 10px;
+		background-color: rgba(255, 255, 255, 0.3);
 	}
 
 	@media (max-height: 500px) and (orientation: landscape) {
 		.header_mapButton {
 			height: 12vh;
+		}
+
+		.header_title {
+			font-size: 1.5rem;
 		}
 	}
 </style>

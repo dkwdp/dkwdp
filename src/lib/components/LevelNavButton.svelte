@@ -25,6 +25,7 @@
 		font-size: 3rem;
 		cursor: pointer;
 		transition: all 0.3s;
+		aspect-ratio: 1/1;
 	}
 
 	@media (max-height: 500px) and (orientation: landscape) {
@@ -35,7 +36,7 @@
 
 	.c-navButton:hover {
 		transform: scale(1.1);
-		border-color: #22d3ee;
+		background-color: rgba(34, 211, 238, 0.1);
 	}
 
 	/* Beispiel wie man Modifier Klassen implementieren kann */
