@@ -31,12 +31,14 @@
 	@media (max-height: 500px) and (orientation: landscape) {
 		.c-navButton {
 			font-size: 1rem;
+			border: 2px solid rgba(34, 211, 238, 0.5);
 		}
 	}
 
 	.c-navButton:hover {
 		transform: scale(1.1);
 		background-color: rgba(34, 211, 238, 0.1);
+		border: 2px solid rgba(34, 211, 238, 1);
 	}
 
 	/* Beispiel wie man Modifier Klassen implementieren kann */

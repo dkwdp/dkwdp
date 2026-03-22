@@ -59,6 +59,10 @@
 			transform: rotate(90deg);
 		}
 
+		80% {
+			transform: rotate(90deg);
+		}
+
 		100% {
 			transform: rotate(0deg);
 		}

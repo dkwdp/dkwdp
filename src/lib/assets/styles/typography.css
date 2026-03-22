@@ -4,11 +4,8 @@ html,
 body {
 	margin: 0;
 	padding: 0;
-	font-family:
-		OCR A Std,
-		monospace;
+	font-family: 'Fredoka One', cursive, sans-serif;
 }
-
 h1 {
 	color: var(--white);
 	margin: unset;

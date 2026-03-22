@@ -35,7 +35,7 @@
 				<div
 					class="levelShell_centerInner"
 					in:fly={{ x: 150 * direction, duration: 600 }}
-					out:fly={{ x: -150 * direction, duration: 600 }}
+					out:fly={{ x: -150 * direction, duration: 300 }}
 				>
 					<div class="levelShell_elementsStack">
 						{#each data.level.elements as element, i (i)}
@@ -100,7 +100,7 @@
 
 	.levelShell_centerInner {
 		width: 100%;
-		height: 100%;
+		height: auto;
 	}
 	.levelShell_left,
 	.levelShell_right {

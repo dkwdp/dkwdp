@@ -37,15 +37,17 @@
 
 <style>
 	button {
-		padding: 15px 80px;
-		font-size: 20px;
+		padding: 8px 80px;
+		font-size: 2rem;
 		font-weight: bold;
+		font-family: 'Fredoka One', cursive;
 		border-radius: 12px;
 		border: none;
 		background: linear-gradient(to bottom, #fb923c, #fd9c00);
 		color: white;
-		cursor: pointer;
 		box-shadow: 0 5px 0 rgb(194, 65, 12);
+		text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+		letter-spacing: 1px;
 	}
 	button:hover {
 		box-shadow: 0px 3px rgb(194, 65, 12);
