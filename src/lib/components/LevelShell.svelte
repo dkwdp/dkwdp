@@ -11,11 +11,12 @@
 	import NextLevelButton from '$lib/level_elements/NextLevelButton.svelte';
 	import PreviousLevelButton from '$lib/level_elements/PreviousLevelButton.svelte';
 	import Header from './global/Header.svelte';
+	import RotateDevice from './RotateDevice.svelte';
 </script>
 
 <div class="levelShell">
 	<Header headerTitle={data.level.title}></Header>
-
+	<RotateDevice></RotateDevice>
 	<div class="levelShell_content">
 		<div class="levelShell_left">
 			{#if data.level.previous_level}
