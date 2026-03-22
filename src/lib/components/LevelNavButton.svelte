@@ -22,14 +22,14 @@
 		border: 2px solid rgba(34, 211, 238, 0.5);
 		background: transparent;
 		color: #22d3ee;
-		font-size: 20px;
+		font-size: 3rem;
 		cursor: pointer;
 		transition: all 0.3s;
 	}
 
-	@media (max-width: var(--tp)) {
+	@media (max-height: 500px) and (orientation: landscape) {
 		.c-navButton {
-			height: 14rem;
+			font-size: 1rem;
 		}
 	}
 

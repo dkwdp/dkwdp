@@ -32,13 +32,20 @@
 		background-position: center;
 		background-color: transparent;
 		color: white;
-		width: clamp(4rem, 2.667rem + 5.926vw, 8rem);
+		height: 8vh;
 		aspect-ratio: 4 / 3;
 		border: none;
+		transition: all 0.3s;
 	}
 	.header_mapButton:hover {
 		transform: scale(1.1);
 		background-color: rgba(255, 255, 255, 0.1);
 		border-radius: 10px;
+	}
+
+	@media (max-height: 500px) and (orientation: landscape) {
+		.header_mapButton {
+			height: 12vh;
+		}
 	}
 </style>

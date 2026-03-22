@@ -42,11 +42,9 @@
 		</div>
 
 		<div class="levelShell_right">
-			<div>
-				{#if data.level.next_level}
-					<NextLevelButton levelId={data.level.next_level} />
-				{/if}
-			</div>
+			{#if data.level.next_level}
+				<NextLevelButton levelId={data.level.next_level} />
+			{/if}
 		</div>
 	</div>
 </div>
@@ -71,32 +69,25 @@
 	}
 
 	.levelShell_center {
-		flex: 1;
+		flex: 6 6 auto;
 		background: transparent;
 		border-radius: 30px;
 		border: 4px solid rgba(59, 130, 246, 0.4);
 		box-shadow: 0 0 50px rgba(59, 130, 246, 0.2); /* TODO: Glow Ja / Nein ? */
 		padding: 30px;
 		text-align: center;
-		margin: 2rem;
+		margin: 2rem 0;
 		overflow-y: auto;
 		scrollbar-width: none;
 	}
 	.levelShell_left,
 	.levelShell_right {
 		display: flex;
+		flex: 1 1 clamp(1rem, 4vw, 8rem);
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		padding: 1rem 1rem 0 1rem;
-		flex: 0 0 clamp(6rem, 12vw, 12rem);
-		width: clamp(2rem, 12vw, 12rem);
-	}
-
-	h1 {
-		text-align: center;
-		margin-top: 2rem;
-		margin-bottom: 2rem;
+		padding: 0 1rem;
 	}
 
 	.levelShell_elementsStack {
@@ -105,5 +96,11 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 1rem;
+	}
+
+	@media (max-height: 500px) and (orientation: landscape) {
+		.levelShell_center {
+			margin: 0.5rem 0;
+		}
 	}
 </style>
