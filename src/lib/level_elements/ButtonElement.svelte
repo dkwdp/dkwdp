@@ -37,27 +37,17 @@
 
 <style>
 	button {
-		color: var(--text-light);
-		background-color: var(--green-500);
-		height: clamp(3rem, 1.571rem + 3.81vw, 5rem);
-		width: clamp(8rem, 4.429rem + 9.524vw, 13rem);
-		font-size: clamp(1.5rem, 0.429rem + 2.857vw, 3rem);
-		border-radius: 2rem;
-		border: 2px solid var(--green-700);
-		font-family: 'Changa One', sans-serif;
-		box-shadow: 0px 6px var(--green-shadow);
-
-		text-shadow:
-			-1px -1px 0 var(--green-700),
-			1px -1px 0 var(--green-700),
-			-1px 1px 0 var(--green-700),
-			1px 1px 0 var(--green-700);
-
-		transition:
-			transform 0.1s ease-out,
-			box-shadow 0.1s ease-out;
+		padding: 15px 80px;
+		font-size: 20px;
+		font-weight: bold;
+		border-radius: 12px;
+		border: none;
+		background: linear-gradient(to bottom, #fb923c, #fd9c00);
+		color: white;
+		cursor: pointer;
+		box-shadow: 0 5px 0 rgb(194, 65, 12);
 	}
 	button:hover {
-		box-shadow: 0px 3px var(--green-shadow);
+		box-shadow: 0px 3px rgb(194, 65, 12);
 	}
 </style>

@@ -13,9 +13,10 @@
 	import Header from './global/Header.svelte';
 </script>
 
-<div class="levelShell level-background">
-	<div class="levelShell_top"><Header></Header></div>
-	<div class="levelShell_bottom">
+<div class="levelShell">
+	<Header headerTitle={data.level.title}></Header>
+
+	<div class="levelShell_content">
 		<div class="levelShell_left">
 			{#if data.level.previous_level}
 				<PreviousLevelButton levelId={data.level.previous_level} />
@@ -23,7 +24,6 @@
 		</div>
 
 		<div class="levelShell_center">
-			<h1>{data.level.title}</h1>
 			<div class="levelShell_elementsStack">
 				{#each data.level.elements as element, i (i)}
 					{#if element.type === 'text'}
@@ -52,51 +52,35 @@
 </div>
 
 <style>
-	.level-background {
-		background-color: var(--bg-dark);
-		background-image: linear-gradient(
-			to right,
-			var(--bg-grad-left) 0%,
-			var(--bg-grad-mid) 20%,
-			var(--bg-grad-mid) 80%,
-			var(--bg-grad-left) 100%
-		);
-
-		background-repeat: repeat, no-repeat;
-		background-position:
-			0 0,
-			0 0;
-		background-size: auto, auto;
-		opacity: 20%, 100%;
-		min-height: 100vh;
-		margin: 0;
-	}
 	.levelShell {
 		display: flex;
 		flex-direction: column;
 		position: relative;
+		background: radial-gradient(circle at center, #1a2a6c 0%, #0a1128 100%);
+		height: 100dvh;
 	}
 
-	.levelShell_bottom {
+	.levelShell_content {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		position: relative;
+		height: auto;
+		flex: 1 1 auto;
+		min-height: 0;
 	}
 
 	.levelShell_center {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
 		flex: 1;
-
-		background-repeat: no-repeat, no-repeat;
-		background-size:
-			98% 100%,
-			100% 100%;
-		background-position:
-			center center,
-			center center;
+		background: transparent;
+		border-radius: 30px;
+		border: 4px solid rgba(59, 130, 246, 0.4);
+		box-shadow: 0 0 50px rgba(59, 130, 246, 0.2); /* TODO: Glow Ja / Nein ? */
+		padding: 30px;
+		text-align: center;
+		margin: 2rem;
+		overflow-y: auto;
+		scrollbar-width: none;
 	}
 	.levelShell_left,
 	.levelShell_right {

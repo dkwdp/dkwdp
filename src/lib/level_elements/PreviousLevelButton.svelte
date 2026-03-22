@@ -4,4 +4,5 @@
 	export let levelId: LevelId;
 </script>
 
-<LevelNavButton {levelId} iconClass="mdi mdi-arrow-left-thick" ariaLabel="Vorheriges Level" />
+<LevelNavButton {levelId} iconClass="mdi mdi-chevron-left" ariaLabel="Vorheriges Level" />
+<!-- TODO: Chevron oder Pfeil? <LevelNavButton {levelId} iconClass="mdi mdi-arrow-left-thick" ariaLabel="Vorheriges Level" /> -->

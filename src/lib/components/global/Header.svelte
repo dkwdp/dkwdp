@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { navigateToMap } from '$lib/helpers';
+	export let headerTitle: string;
 
 	function navBack() {
 		navigateToMap();
@@ -8,10 +9,10 @@
 
 <header>
 	<button class="header_mapButton" on:click={navBack} aria-label="Karte"></button>
-	<h1 class="header_title">Leveltitel: xyz</h1>
+	<h1 class="header_title">{headerTitle}</h1>
 </header>
 
-<style>
+<style scoped>
 	header {
 		position: relative;
 		z-index: 10;
@@ -19,7 +20,7 @@
 		align-items: center;
 		gap: 2rem;
 		padding: 8px 16px;
-		background-color: rgba(10, 17, 40, 0.8);
+		background-color: rgba(10, 17, 40, 0.5);
 		backdrop-filter: blur(4px);
 		border-bottom: 1px solid rgba(255, 255, 255, 0.4);
 	}

@@ -17,21 +17,14 @@
 
 <style>
 	.c-navButton {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		color: #094579;
-		background-color: #018cd5;
-		height: clamp(8rem, 1.333rem + 29.63vw, 28rem);
-		width: clamp(2rem, 0.667rem + 5.926vw, 6rem);
-		font-size: clamp(1.75rem, 0.667rem + 4.815vw, 5rem);
-		border-radius: 1rem;
-		border: 2px solid #004c61;
-		font-family: 'Changa One', sans-serif;
-		box-shadow: 0px 6px #092230;
-		transition:
-			transform 0.1s ease-out,
-			box-shadow 0.1s ease-out;
+		padding: 15px;
+		border-radius: 50%;
+		border: 2px solid rgba(34, 211, 238, 0.5);
+		background: transparent;
+		color: #22d3ee;
+		font-size: 20px;
+		cursor: pointer;
+		transition: all 0.3s;
 	}
 
 	@media (max-width: var(--tp)) {
@@ -41,7 +34,8 @@
 	}
 
 	.c-navButton:hover {
-		box-shadow: 0px 3px #092230;
+		transform: scale(1.1);
+		border-color: #22d3ee;
 	}
 
 	/* Beispiel wie man Modifier Klassen implementieren kann */
