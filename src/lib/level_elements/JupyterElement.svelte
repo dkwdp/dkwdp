@@ -87,6 +87,18 @@
 		};
 	});
 
+	const errorTranslations: Record<string, string> = {
+		NameError: "NameError (Name nicht definiert)",
+		TypeError: "TypeError (Falscher Datentyp)",
+		SyntaxError: "SyntaxError (Syntaxfehler)",
+		IndentationError: "IndentationError (Einrückungsfehler)",
+		ZeroDivisionError: "ZeroDivisionError (Division durch Null)",
+		ValueError: "ValueError (Ungültiger Wert)",
+		IndexError: "IndexError (Index außerhalb der Liste)",
+		KeyError: "KeyError (Schlüssel nicht gefunden)",
+		AttributeError: "AttributeError (Attribut existiert nicht)"
+	};
+
 	async function runCode() {
 	if (!isReady) return;
 
@@ -121,9 +133,34 @@
 		output = textOutput || 'Done';
 
 	} catch (error: any) {
-		const lines = error.message.split('\n').filter((line: string) => line.trim());
-		output = lines[lines.length - 1];
+	const message = error.message;
+
+	const match = message.match(/File "<exec>", line (\d+)/);
+	const lineNumber = match ? match[1] : null;
+
+	const lines = message.split('\n').filter((line: string) => line.trim());
+	const lastLine = lines[lines.length - 1];
+
+	if (lineNumber) {
+		let translated = lastLine;
+
+		for (const key in errorTranslations) {
+			if (lastLine.startsWith(key)) {
+				translated = lastLine.replace(key, errorTranslations[key]);
+				break;
+			}
+		}
+
+		if (lineNumber) {
+			output = `Zeile ${lineNumber}: ${translated}`;
+		} else {
+			output = translated;
+		}
+		
+	} else {
+		output = lastLine;
 	}
+}
 }
 </script>
 
