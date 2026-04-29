@@ -18,7 +18,7 @@
 </script>
 
 <div class="levelShell">
-	<Header headerTitle={data.level.title} />
+	<Header headerTitle={data.level.title} showMapButton />
 	<RotateDevice />
 	<div class="levelShell_content">
 		<div class="levelShell_left">

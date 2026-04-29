@@ -3,22 +3,24 @@
 	import { resolve } from '$app/paths';
 	import type { MapStructure } from '$lib/types';
 	import { mapState } from '$lib/mapStore.svelte';
-	export let structure: MapStructure; // get map-data 
+	import RotateDevice from './RotateDevice.svelte';
+	import Header from './global/Header.svelte';
+	export let structure: MapStructure; // get map-data
 
 	// calculate number of rows and column
 	$: rows = structure.tiles.length; // $ --> new value with change of structure.tiles
 	$: cols = structure.tiles[0]?.length || 0; // ? --> in case tiles[0] doesn't exist
-	
+
 	// initial start-values for viewport (later automatically changed by bind:clientWidth)
 	let viewportWidth = 1920;
 	let viewportHeight = 1080;
-	
+
 	$: TILE_SIZE = Math.max(
-		Math.ceil(viewportWidth / cols * 1.5), // map-size is 1.5 times the viewport
-		Math.ceil(viewportHeight / rows * 1.5),
+		Math.ceil((viewportWidth / cols) * 1.5), // map-size is 1.5 times the viewport
+		Math.ceil((viewportHeight / rows) * 1.5),
 		120 // minimum tile-size
 	);
-	
+
 	$: mapWidth = cols * TILE_SIZE;
 	$: mapHeight = rows * TILE_SIZE;
 
@@ -26,23 +28,20 @@
 	let zoom = 1;
 
 	// min zoom so map always fills viewport
-	$: MIN_ZOOM = Math.max(
-		viewportWidth / mapWidth,
-		viewportHeight / mapHeight
-	);
+	$: MIN_ZOOM = Math.max(viewportWidth / mapWidth, viewportHeight / mapHeight);
 	const MAX_ZOOM = 3; // maximum 300%
 	const ZOOM_SENSITIVITY = 0.001;
-	
+
 	// calculate scaled map size
 	$: scaledMapWidth = mapWidth * zoom;
 	$: scaledMapHeight = mapHeight * zoom;
-	
+
 	// border for scrolling
 	const maxTranslateX = 0;
 	$: minTranslateX = Math.min(0, viewportWidth - scaledMapWidth);
 	const maxTranslateY = 0;
 	$: minTranslateY = Math.min(0, viewportHeight - scaledMapHeight);
-	
+
 	// drag/drop variables
 	let isDragging = false;
 	let hasMoved = false;
@@ -52,7 +51,10 @@
 	let translateY = 0;
 	let currentTranslateX = 0;
 	let currentTranslateY = 0;
-	
+
+	// touch variables
+	let lastTouchDistance = 0;
+
 	onMount(() => {
 		const saved = mapState.mapInfo[structure.id];
 		if (!saved) return;
@@ -62,64 +64,147 @@
 		currentTranslateX = translateX;
 		currentTranslateY = translateY;
 	});
-	
+
 	// save zoomlevel and position to store
 	function saveView() {
 		mapState.mapInfo[structure.id] = { zoom, translateX, translateY };
 	}
-	
+
 	function handleMouseDown(e: MouseEvent) {
 		isDragging = true;
 		hasMoved = false;
 		startX = e.clientX - currentTranslateX;
 		startY = e.clientY - currentTranslateY;
 	}
-	
+
 	function handleMouseMove(e: MouseEvent) {
 		if (!isDragging) return;
-		
+
 		const newX = e.clientX - startX;
 		const newY = e.clientY - startY;
-		
+
 		// if mouse has moved (more than 3)
 		if (Math.abs(newX - currentTranslateX) > 3 || Math.abs(newY - currentTranslateY) > 3) {
 			hasMoved = true;
 		}
-		
+
 		// clamp border
 		translateX = Math.min(maxTranslateX, Math.max(minTranslateX, newX));
 		translateY = Math.min(maxTranslateY, Math.max(minTranslateY, newY));
 	}
-	
+
 	function handleMouseUp() {
 		isDragging = false;
 		currentTranslateX = translateX;
 		currentTranslateY = translateY;
 		saveView();
 	}
-	
+
+	// Touch event handlers for mobile
+	function handleTouchStart(e: TouchEvent) {
+		if (e.touches.length === 1) {
+			// Single touch - drag
+			e.preventDefault();
+			isDragging = true;
+			hasMoved = false;
+			startX = e.touches[0].clientX - currentTranslateX;
+			startY = e.touches[0].clientY - currentTranslateY;
+		} else if (e.touches.length === 2) {
+			// Two finger touch - pinch zoom
+			e.preventDefault();
+			isDragging = false;
+			const dx = e.touches[0].clientX - e.touches[1].clientX;
+			const dy = e.touches[0].clientY - e.touches[1].clientY;
+			lastTouchDistance = Math.sqrt(dx * dx + dy * dy);
+		}
+	}
+
+	function handleTouchMove(e: TouchEvent) {
+		if (e.touches.length === 1 && isDragging) {
+			// Single touch drag
+			e.preventDefault();
+			const newX = e.touches[0].clientX - startX;
+			const newY = e.touches[0].clientY - startY;
+
+			if (Math.abs(newX - currentTranslateX) > 3 || Math.abs(newY - currentTranslateY) > 3) {
+				hasMoved = true;
+			}
+
+			// clamp border
+			translateX = Math.min(maxTranslateX, Math.max(minTranslateX, newX));
+			translateY = Math.min(maxTranslateY, Math.max(minTranslateY, newY));
+		} else if (e.touches.length === 2) {
+			// Two finger pinch zoom
+			e.preventDefault();
+			const dx = e.touches[0].clientX - e.touches[1].clientX;
+			const dy = e.touches[0].clientY - e.touches[1].clientY;
+			const currentDistance = Math.sqrt(dx * dx + dy * dy);
+
+			if (lastTouchDistance > 0) {
+				const scale = currentDistance / lastTouchDistance;
+				const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom * scale));
+
+				// Center point of the two fingers
+				const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+				const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+
+				// Calculate zoom center on map
+				const mapX = (centerX - translateX) / zoom;
+				const mapY = (centerY - translateY) / zoom;
+
+				// Calculate new translation
+				let newTranslateX = centerX - mapX * newZoom;
+				let newTranslateY = centerY - mapY * newZoom;
+
+				zoom = newZoom;
+
+				// Calculate new borders
+				const newScaledMapWidth = mapWidth * newZoom;
+				const newScaledMapHeight = mapHeight * newZoom;
+				const newMaxTranslateX = 0;
+				const newMinTranslateX = Math.min(0, viewportWidth - newScaledMapWidth);
+				const newMaxTranslateY = 0;
+				const newMinTranslateY = Math.min(0, viewportHeight - newScaledMapHeight);
+
+				// clamp borders
+				translateX = Math.min(newMaxTranslateX, Math.max(newMinTranslateX, newTranslateX));
+				translateY = Math.min(newMaxTranslateY, Math.max(newMinTranslateY, newTranslateY));
+			}
+
+			lastTouchDistance = currentDistance;
+		}
+	}
+
+	function handleTouchEnd() {
+		isDragging = false;
+		currentTranslateX = translateX;
+		currentTranslateY = translateY;
+		lastTouchDistance = 0;
+		saveView();
+	}
+
 	// zoom with mouse wheel
 	function handleWheel(e: WheelEvent) {
 		e.preventDefault();
-		
+
 		// mousposition relative to viewport
 		const mouseX = e.clientX;
 		const mouseY = e.clientY;
-		
+
 		// position on map before zoom
 		const mapX = (mouseX - translateX) / zoom;
 		const mapY = (mouseY - translateY) / zoom;
-		
+
 		// calculate new zoom
 		const delta = -e.deltaY * ZOOM_SENSITIVITY;
 		const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom + delta));
-		
+
 		// calculate new translation
 		let newTranslateX = mouseX - mapX * newZoom;
 		let newTranslateY = mouseY - mapY * newZoom;
-		
+
 		zoom = newZoom;
-		
+
 		// calculate new borders
 		const newScaledMapWidth = mapWidth * newZoom;
 		const newScaledMapHeight = mapHeight * newZoom;
@@ -127,11 +212,11 @@
 		const newMinTranslateX = Math.min(0, viewportWidth - newScaledMapWidth);
 		const newMaxTranslateY = 0;
 		const newMinTranslateY = Math.min(0, viewportHeight - newScaledMapHeight);
-		
+
 		// clamp borders
 		translateX = Math.min(newMaxTranslateX, Math.max(newMinTranslateX, newTranslateX));
 		translateY = Math.min(newMaxTranslateY, Math.max(newMinTranslateY, newTranslateY));
-		
+
 		currentTranslateX = translateX;
 		currentTranslateY = translateY;
 		saveView();
@@ -141,66 +226,65 @@
 	function getTile(row: number, col: number): string {
 		return structure.tiles[row]?.[col] || ' ';
 	}
-	
+
 	// check if tile has any connections
 	function hasConnection(tile: string, direction: 'north' | 'east' | 'south' | 'west'): boolean {
 		const connections: Record<string, string[]> = {
-			
 			// vertical lines
-			'I': ['north', 'south'],
-			'i': ['north', 'south'],
+			I: ['north', 'south'],
+			i: ['north', 'south'],
 			'|': ['north', 'south'],
-			
+
 			// horizontal lines
 			'-': ['east', 'west'],
 			'–': ['east', 'west'],
-			
+
 			// corners
-			'L': ['north', 'east'],
-			'l': ['north', 'east'],
-			'r': ['east', 'south'],
-			'R': ['east', 'south'],
+			L: ['north', 'east'],
+			l: ['north', 'east'],
+			r: ['east', 'south'],
+			R: ['east', 'south'],
 			'7': ['west', 'south'],
-			'J': ['north', 'west'],
-			'j': ['north', 'west'],
-			
+			J: ['north', 'west'],
+			j: ['north', 'west'],
+
 			// T-crossing
-			'T': ['east', 'south', 'west'],
-			't': ['east', 'south', 'west'],
-			'q': ['north', 'south', 'west'],
-			'Q': ['north', 'south', 'west'],
-			'w': ['north', 'east', 'west'],
-			'W': ['north', 'east', 'west'],
-			'p': ['north', 'east', 'south'],
-			'P': ['north', 'east', 'south'],
-			
+			T: ['east', 'south', 'west'],
+			t: ['east', 'south', 'west'],
+			q: ['north', 'south', 'west'],
+			Q: ['north', 'south', 'west'],
+			w: ['north', 'east', 'west'],
+			W: ['north', 'east', 'west'],
+			p: ['north', 'east', 'south'],
+			P: ['north', 'east', 'south'],
+
 			// crossing
 			'+': ['north', 'east', 'south', 'west'],
-			
+
 			// dead-end
 			"'": ['north'],
 			'>': ['east'],
 			',': ['south'],
 			'<': ['west']
 		};
-		
+
 		return connections[tile]?.includes(direction) || false;
 	}
 
 	// check all 4 directions, count connections, rotate tile-image
 	function getTileImageInfo(tile: string): { type: string; rotation: number } | null {
 		if (tile === ' ') return null;
-		
+
 		const north = hasConnection(tile, 'north');
 		const east = hasConnection(tile, 'east');
 		const south = hasConnection(tile, 'south');
 		const west = hasConnection(tile, 'west');
-		
+
 		const connectionCount = [north, east, south, west].filter(Boolean).length;
-		
+
 		// if no connection
 		if (connectionCount === 0) return null;
-		
+
 		// 1 connection (dead-end)
 		if (connectionCount === 1) {
 			if (north) return { type: 'dead-end', rotation: 0 }; // Verbindung nach oben
@@ -208,21 +292,21 @@
 			if (south) return { type: 'dead-end', rotation: 180 }; // Verbindung nach unten
 			if (west) return { type: 'dead-end', rotation: 270 }; // Verbindung nach links
 		}
-		
+
 		// 2 connections (straight line)
 		if (connectionCount === 2) {
 			// vertical line (north-south)
 			if (north && south) return { type: 'straight', rotation: 90 };
 			// horizontal line (east-west)
 			if (east && west) return { type: 'straight', rotation: 0 };
-			
-			// corners		
+
+			// corners
 			if (north && east) return { type: 'corner', rotation: 90 };
 			if (east && south) return { type: 'corner', rotation: 180 };
 			if (south && west) return { type: 'corner', rotation: 270 };
 			if (west && north) return { type: 'corner', rotation: 0 };
 		}
-		
+
 		// 3 connections (T-crossing)
 		if (connectionCount === 3) {
 			if (north && east && west) return { type: 't-junction', rotation: 0 };
@@ -230,33 +314,37 @@
 			if (east && south && west) return { type: 't-junction', rotation: 180 };
 			if (north && south && west) return { type: 't-junction', rotation: 270 };
 		}
-		
+
 		// 4 connections (crossing)
 		if (connectionCount === 4) {
 			return { type: 'cross', rotation: 0 };
 		}
-		
+
 		return null;
 	}
 </script>
 
 <!-- listens for events for whole window (so drag and drop works) -->
 <svelte:window
-	on:mousemove={handleMouseMove} 
+	on:mousemove={handleMouseMove}
 	on:mouseup={handleMouseUp}
 	on:wheel={handleWheel}
+	on:touchmove={handleTouchMove}
+	on:touchend={handleTouchEnd}
 />
 
+<RotateDevice />
+<Header headerTitle={structure.title} />
 <div class="map-container" bind:clientWidth={viewportWidth} bind:clientHeight={viewportHeight}>
-	<h1>{structure.title}</h1>
-	
 	<!-- Svelte normally warns that divs shouldn't have events -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div 
+	<div
 		class="map-viewport"
 		on:mousedown={handleMouseDown}
+		on:touchstart={handleTouchStart}
+		on:wheel={handleWheel}
 	>
-		<div 
+		<div
 			class="map-content"
 			style="
 				width: {mapWidth}px; 
@@ -266,63 +354,57 @@
 				transform-origin: 0 0;
 			"
 		>
+			<!-- background-image -->
+			<img
+				src={`/content/${structure.id}/${structure.background}`}
+				alt={structure.title}
+				class="map-bg"
+				draggable="false"
+			/>
 
-		<!-- background-image -->
-		<img src={
-			`/content/${structure.id}/${structure.background}`} 
-			alt={structure.title} 
-			class="map-bg"
-			draggable="false"
-		/>
-		
-		<!-- grid with paths and level-points -->
-		<div class="grid" style="--rows: {rows}; --cols: {cols}; --tile-size: {TILE_SIZE}px;">
-			
-			<!-- 1. "paint" the paths -->
-			<!-- Array(rows) creates an empty array with rows slots -->
-			{#each {length: rows}, row (row)}
-				{#each {length: cols}, col (col)}
-					<!-- local variables for loop -->
-					{@const tile = getTile(row, col)}
-					{@const tileInfo = getTileImageInfo(tile)}
-					
-					{#if tileInfo}
-						<div 
-							class="tile-container" 
-							style="grid-row: {row + 1}; grid-column: {col + 1};"
-						>
-							<img 
-								src="/tiles/{tileInfo.type}.png"
-								alt="path tile"
-								class="tile-img"
-								style="transform: rotate({tileInfo.rotation}deg);"
-								draggable="false"
-							/>
-						</div>
-					{/if}
+			<!-- grid with paths and level-points -->
+			<div class="grid" style="--rows: {rows}; --cols: {cols}; --tile-size: {TILE_SIZE}px;">
+				<!-- 1. "paint" the paths -->
+				<!-- Array(rows) creates an empty array with rows slots -->
+				{#each { length: rows }, row (row)}
+					{#each { length: cols }, col (col)}
+						<!-- local variables for loop -->
+						{@const tile = getTile(row, col)}
+						{@const tileInfo = getTileImageInfo(tile)}
+
+						{#if tileInfo}
+							<div class="tile-container" style="grid-row: {row + 1}; grid-column: {col + 1};">
+								<img
+									src="/tiles/{tileInfo.type}.png"
+									alt="path tile"
+									class="tile-img"
+									style="transform: rotate({tileInfo.rotation}deg);"
+									draggable="false"
+								/>
+							</div>
+						{/if}
+					{/each}
 				{/each}
-			{/each}
-			
-			<!-- 2. set level-points -->
-			{#each structure.levels as level, index (level.id)}
-				<a 
-					href={hasMoved ? undefined : resolve(`/map/${structure.id}/level/${level.id}`)}
-					class="level-node"
-					style="grid-row: {level.pos[0] + 1}; grid-column: {level.pos[1] + 1};"
-					title={level.title}
-					draggable="false"
-					on:click={(e) => {
-						if (hasMoved) {
-							e.preventDefault();
-						} else {
-							mapState.highlightFirstLevel = false;
-						}
-					}}
-				>
-					<div class="dot" class:highlighted={mapState.highlightFirstLevel && index === 0}></div>
-				</a>
-			{/each}
-			
+
+				<!-- 2. set level-points -->
+				{#each structure.levels as level, index (level.id)}
+					<a
+						href={hasMoved ? undefined : resolve(`/map/${structure.id}/level/${level.id}`)}
+						class="level-node"
+						style="grid-row: {level.pos[0] + 1}; grid-column: {level.pos[1] + 1};"
+						title={level.title}
+						draggable="false"
+						on:click={(e) => {
+							if (hasMoved) {
+								e.preventDefault();
+							} else {
+								mapState.highlightFirstLevel = false;
+							}
+						}}
+					>
+						<div class="dot" class:highlighted={mapState.highlightFirstLevel && index === 0}></div>
+					</a>
+				{/each}
 			</div>
 		</div>
 	</div>
@@ -332,7 +414,7 @@
 	* {
 		box-sizing: border-box;
 	}
-	
+
 	.map-container {
 		padding: 0;
 		width: 100vw;
@@ -343,20 +425,7 @@
 		top: 0;
 		left: 0;
 	}
-	
-	h1 {
-		position: absolute;
-		top: 1rem;
-		left: 50%;
-		transform: translateX(-50%);
-		z-index: 100;
-		margin: 0;
-		color: var(--white);
-		font-size: clamp(1.5rem, 4vw, 2.5rem);
-		pointer-events: none;
-		text-shadow: 2px 2px 4px var(--map-shadow);
-	}
-	
+
 	.map-viewport {
 		position: absolute;
 		top: 0;
@@ -365,13 +434,16 @@
 		height: 100%;
 		overflow: hidden;
 		user-select: none;
+		touch-action: none;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
 	}
 
 	.map-content {
 		position: relative;
 		will-change: transform;
 	}
-	
+
 	.map-bg {
 		position: absolute;
 		top: 0;
@@ -382,7 +454,7 @@
 		display: block;
 		pointer-events: none;
 	}
-	
+
 	.grid {
 		position: absolute;
 		top: 0;
@@ -393,7 +465,7 @@
 		grid-template-rows: repeat(var(--rows), var(--tile-size));
 		grid-template-columns: repeat(var(--cols), var(--tile-size));
 	}
-	
+
 	/* tiles */
 	.tile-container {
 		width: 100%;
@@ -403,7 +475,7 @@
 		align-items: center;
 		justify-content: center;
 	}
-	
+
 	.tile-img {
 		width: 100%;
 		height: 100%;
@@ -411,7 +483,7 @@
 		display: block;
 		pointer-events: none;
 	}
-	
+
 	/* level-point */
 	.level-node {
 		display: flex;
@@ -422,22 +494,24 @@
 		pointer-events: none;
 		text-decoration: none;
 	}
-	
+
 	.dot {
 		width: 4rem;
 		height: 4rem;
 		background: var(--cyan-500);
 		border-radius: 50%;
 		border: 4px solid var(--cyan-700);
-		transition: background 0.2s, transform 0.2s;
+		transition:
+			background 0.2s,
+			transform 0.2s;
 		pointer-events: auto;
 	}
-	
+
 	.level-node:hover .dot {
 		background: var(--cyan-300);
 		transform: scale(1.1);
 	}
-	
+
 	.dot.highlighted {
 		animation: pulse 1.5s ease-in-out infinite;
 		/*box-shadow: 0 0 15px rgba(0, 255, 255, 1);  */
@@ -447,12 +521,12 @@
 	}
 
 	@keyframes pulse {
-		0%, 100% { 
-			transform: scale(1.00); 
+		0%,
+		100% {
+			transform: scale(1);
 		}
-		50% { 
-			transform: scale(1.35); 
+		50% {
+			transform: scale(1.35);
 		}
 	}
-	
 </style>

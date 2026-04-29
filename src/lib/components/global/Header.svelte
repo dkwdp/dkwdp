@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { navigateToMap } from '$lib/helpers';
 	export let headerTitle: string;
+	export let showMapButton = false;
 
 	function navBack() {
 		navigateToMap();
@@ -8,7 +9,9 @@
 </script>
 
 <header>
-	<button class="header_mapButton" on:click={navBack} aria-label="Karte"></button>
+	{#if showMapButton}
+		<button class="header_mapButton" on:click={navBack} aria-label="Zurück zur Karte"></button>
+	{/if}
 	<h1 class="header_title">{headerTitle}</h1>
 </header>
 
@@ -46,7 +49,7 @@
 
 	@media (max-height: 500px) and (orientation: landscape) {
 		.header_mapButton {
-			height: 12vh;
+			height: 10vh;
 		}
 
 		.header_title {
